@@ -3,11 +3,18 @@
 import { NavBar } from "../../landing-page/components/navbar/navbar";
 import { BackGround } from "../../landing-page/components/background";
 import { InputBar } from "../../landing-page/components/inputbar";
+import { TypewriterEffect } from "@/components/ui/typewriter-effect";
 export default function Home() {
   return (
     <div>
-      <NavBar />
+      <div>
+        <NavBar />
+      </div>
 
+      <div className="mt-50 text-center">
+        {" "}
+        <TypewriterEffect />
+      </div>
       <div className="flex items-center justify-center min-h-screen">
         <BackGround />
         {/* <div className="h-auto w-70 m-1.5">
