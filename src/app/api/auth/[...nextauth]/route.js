@@ -1,8 +1,12 @@
+import NextAuth from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcrypt";
+import { prisma } from "@/lib/prisma";
 export const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
-      credentals: {
+      credentials: {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
@@ -14,16 +18,14 @@ export const authOptions = {
           where: { email: credentials.email },
         });
         if (!userFound) {
-          return response
-            .status(401)
-            .json({ message: "Invalid email or password" });
+          return null;
         }
         const isPasswordValid = await bcrypt.compare(
           credentials.password,
           userFound.password,
         );
         if (!isPasswordValid) {
-          return response.status(401).json({ message: "Invalid password" });
+          return null;
         }
         return {
           id: userFound.id,
@@ -33,21 +35,22 @@ export const authOptions = {
       },
     }),
   ],
-  pages: {
-    signIn: "/auth/signin",
-  },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
       }
+      console.log("JWT Callback - Token:", token);
       return token;
     },
     async session({ session, token }) {
-      if (token) {
+      if (token && session.user) {
         session.user.id = token.id;
       }
       return session;
     },
   },
 };
+
+const handler = NextAuth(authOptions);
+export { handler as GET, handler as POST };
