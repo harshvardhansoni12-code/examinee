@@ -1,6 +1,5 @@
 import bcrypt from "bcrypt";
 import { prisma } from "@/lib/prisma";
-
 export async function POST(req) {
   try {
     const body = await req.json();
@@ -38,6 +37,20 @@ export async function POST(req) {
     );
   } catch (error) {
     console.error("Signup error:", error);
+    console.error("Error code:", error.code);
+    console.error("Error meta:", error.meta);
+
+    // Return different error messages based on error type
+    if (error.code === "ECONNREFUSED") {
+      return Response.json(
+        {
+          message:
+            "Database connection failed. Please check your DATABASE_URL.",
+        },
+        { status: 503 },
+      );
+    }
+
     return Response.json({ message: "Internal Server Error" }, { status: 500 });
   }
 }

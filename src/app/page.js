@@ -1,8 +1,8 @@
 "use client";
 
-import { NavBar } from "../../landing-page/components/navbar/navbar";
-import { BackGround } from "../../landing-page/components/background";
-import { InputBar } from "../../landing-page/components/inputbar";
+import { NavBar } from "../../landing-page/components/navbar/navbar.jsx";
+import { BackGround } from "../../landing-page/components/background.jsx";
+import { InputBar } from "../../landing-page/components/inputbar.jsx";
 import { TypewriterEffect } from "@/components/ui/typewriter-effect";
 export default function Home() {
   return (
