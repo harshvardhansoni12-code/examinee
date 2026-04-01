@@ -1,25 +1,29 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from "bcrypt";
 import { prisma } from "@/lib/prisma";
+import bcrypt from "bcrypt";
 export const authOptions = {
+  // Configure one or more authentication providers
   providers: [
     CredentialsProvider({
-      name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "text" },
+        email: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error("Email and password are required");
-        }
+        console.log(credentials);
+        console.log("before user found");
         const userFound = await prisma.user.findUnique({
-          where: { email: credentials.email },
+          where: {
+            email: credentials.email,
+          },
         });
         if (!userFound) {
           return null;
         }
+        console.log("after user found");
+        console.log(userFound);
+        console.log("before password compare");
         const isPasswordValid = await bcrypt.compare(
           credentials.password,
           userFound.password,
@@ -27,30 +31,30 @@ export const authOptions = {
         if (!isPasswordValid) {
           return null;
         }
-        return {
-          id: userFound.id,
-          email: userFound.email,
-          name: userFound.name,
-        };
+        console.log("after password compare");
+        return userFound;
       },
     }),
   ],
+  //
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
+    async jwt({ token, account }) {
+      // Persist the OAuth access_token to the token right after signin
+      if (account) {
+        token.accessToken = account.access_token;
       }
-      console.log("JWT Callback - Token:", token);
+      console.log(token);
       return token;
     },
     async session({ session, token }) {
-      if (token && session.user) {
-        session.user.id = token.id;
-      }
+      // Send properties to the client, like an access_token from a provider.
+      session.accessToken = token.accessToken;
+      console.log(session);
       return session;
     },
   },
 };
 
 const handler = NextAuth(authOptions);
+
 export { handler as GET, handler as POST };

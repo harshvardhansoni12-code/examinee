@@ -1,7 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthScreen } from "../../auth/components/AuthScreen";
-
+import { BackGround } from "../../landing-page/components/background";
 const geistSans = Geist({
   subsets: ["latin"],
 });
@@ -19,7 +19,17 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${geistSans.className}  h-full antialiased`}>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <div className="flex items-center justify-center min-h-screen">
+          <BackGround />
+          <div className="h-auto w-70 m-1.5">
+            <div className="absolute inset-0 flex justify-center items-center">
+              <AuthScreen />
+            </div>
+          </div>
+        </div>
+        {children}
+      </body>
     </html>
   );
 }

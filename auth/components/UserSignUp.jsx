@@ -3,6 +3,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 const UserSignUp = ({ setState }) => {
   const [fullname, setFullname] = useState("");
@@ -11,6 +14,7 @@ const UserSignUp = ({ setState }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const router = useRouter();
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -19,27 +23,34 @@ const UserSignUp = ({ setState }) => {
     setSuccess("");
 
     try {
-      const response = await fetch("/api/v1/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fullname, email, password }),
+      // Create the user
+      const result = await axios.post("/api/v1/signup", {
+        fullname,
+        email,
+        password,
       });
 
-      const data = await response.json();
+      if (result.status === 201) {
+        setSuccess("Account created successfully! Signing you in...");
 
-      if (!response.ok) {
-        setError(data.message || "Signup failed");
-        return;
+        // Auto-login the user after signup
+        const signInResult = await signIn("credentials", {
+          email,
+          password,
+          redirect: false,
+        });
+
+        if (signInResult?.ok) {
+          router.push("/");
+        } else {
+          setError(
+            "Account created but login failed. Please try signing in manually.",
+          );
+          setLoading(false);
+        }
       }
-
-      setSuccess(data.message);
-      setFullname("");
-      setEmail("");
-      setPassword("");
     } catch (err) {
-      setError("Error connecting to server");
-      console.error(err);
-    } finally {
+      setError("Signup failed. Please try again.");
       setLoading(false);
     }
   };

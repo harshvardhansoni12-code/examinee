@@ -2,7 +2,35 @@ import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+
 const UserSignIn = ({ setState }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
+
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    const result = await signIn("credentials", {
+      email,
+      password,
+    });
+    if (result?.ok) {
+      setLoading(true);
+      router.push("/");
+      setLoading(false);
+    } else {
+      setError("An unexpected error occurred");
+      setLoading(false);
+    }
+  };
+
   return (
     <div>
       <Card className="p-2 w-70">
@@ -10,14 +38,28 @@ const UserSignIn = ({ setState }) => {
         <CardDescription className="flex justify-center">
           Enter the details
         </CardDescription>
-        <Input className="bg-white" type="text" placeholder="email" required />
-        <Input
-          className="bg-white"
-          type="text"
-          placeholder="password"
-          required
-        />
-        <Button className="w-full">login</Button>
+        {error && <div className="text-red-500 text-sm mb-2">{error}</div>}
+        <form onSubmit={handleSignIn}>
+          <Input
+            className="bg-white mb-2"
+            type="email"
+            placeholder="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <Input
+            className="bg-white mb-2"
+            type="password"
+            placeholder="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <Button className="w-full" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
+          </Button>
+        </form>
         <Separator />
         <Button className="w-full" variant="outline">
           Login with Google
@@ -26,7 +68,7 @@ const UserSignIn = ({ setState }) => {
           Login with Github
         </Button>
         <div className="flex justify-center items-center">
-          Already have an account?
+          Don't have an account?
           <span
             className="hover:underline hover:text-blue-500"
             onClick={() => {
@@ -42,4 +84,3 @@ const UserSignIn = ({ setState }) => {
 };
 
 export default UserSignIn;
-//

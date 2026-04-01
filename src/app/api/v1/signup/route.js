@@ -9,7 +9,7 @@ export async function POST(req) {
     console.log("PRISMA:", prisma);
     const userFound = await prisma.user.findUnique({
       where: {
-        email: email.toLowerCase(),
+        email: email,
       },
     });
 
@@ -21,8 +21,8 @@ export async function POST(req) {
 
     const user = await prisma.user.create({
       data: {
-        fullname: fullname.trim(),
-        email: email.toLowerCase(),
+        fullname: fullname,
+        email: email,
         password: hashedPassword,
       },
     });
