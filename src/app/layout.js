@@ -1,7 +1,8 @@
 import { Geist, Geist_Mono } from "next/font/google";
+import { AuthScreen } from "./authpage/AuthScreen.jsx";
+import { NavBar } from "../../landing-page/components/navbar/navbar.jsx";
+import { Providers } from "./providers.jsx";
 import "./globals.css";
-import { AuthScreen } from "../../auth/components/AuthScreen";
-import { BackGround } from "../../landing-page/components/background";
 const geistSans = Geist({
   subsets: ["latin"],
 });
@@ -20,15 +21,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${geistSans.className}  h-full antialiased`}>
       <body className="min-h-full flex flex-col">
+        <NavBar />
         <div className="flex items-center justify-center min-h-screen">
-          <BackGround />
-          <div className="h-auto w-70 m-1.5">
-            <div className="absolute inset-0 flex justify-center items-center">
-              <AuthScreen />
-            </div>
-          </div>
+          <AuthScreen />
         </div>
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

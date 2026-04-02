@@ -5,7 +5,6 @@ import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 
 const UserSignUp = ({ setState }) => {
   const [fullname, setFullname] = useState("");
@@ -24,14 +23,13 @@ const UserSignUp = ({ setState }) => {
 
     try {
       // Create the user
-      const result = await axios.post("/api/v1/signup", {
-        fullname,
-        email,
-        password,
+      const response = await fetch("/api/v1/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fullname, email, password }),
       });
-
-      if (result.status === 201) {
-        setSuccess("Account created successfully! Signing you in...");
+      if (response?.ok) {
+        setSuccess("Account created successfully!");
 
         // Auto-login the user after signup
         const signInResult = await signIn("credentials", {
@@ -42,12 +40,13 @@ const UserSignUp = ({ setState }) => {
 
         if (signInResult?.ok) {
           router.push("/");
+          router.refresh();
         } else {
           setError(
             "Account created but login failed. Please try signing in manually.",
           );
-          setLoading(false);
         }
+        setLoading(false);
       }
     } catch (err) {
       setError("Signup failed. Please try again.");

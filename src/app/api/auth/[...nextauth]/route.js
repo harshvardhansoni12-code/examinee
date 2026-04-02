@@ -32,24 +32,30 @@ export const authOptions = {
           return null;
         }
         console.log("after password compare");
-        return userFound;
+        return {
+          id: userFound.id,
+          email: userFound.email,
+          name: userFound.fullname,
+        };
       },
     }),
   ],
   //
   callbacks: {
-    async jwt({ token, account }) {
-      // Persist the OAuth access_token to the token right after signin
-      if (account) {
-        token.accessToken = account.access_token;
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
       }
-      console.log(token);
       return token;
     },
     async session({ session, token }) {
-      // Send properties to the client, like an access_token from a provider.
-      session.accessToken = token.accessToken;
-      console.log(session);
+      session.user = {
+        id: token.id,
+        email: token.email,
+        name: token.name,
+      };
       return session;
     },
   },

@@ -1,11 +1,11 @@
 "use client";
-import UserSignUp from "../components/UserSignUp";
-import UserSignIn from "../components/UserSignIn";
+import UserSignUp from "../../../auth/components/UserSignUp.jsx";
+import UserSignIn from "../../../auth/components/UserSignIn.jsx";
 import { useState } from "react";
 export const AuthScreen = () => {
   const [state, setState] = useState(true);
   return (
-    <div>
+    <div className="min-h-screen flex items-center justify-center">
       {state == true ? (
         <UserSignIn state={state} setState={setState} />
       ) : (
