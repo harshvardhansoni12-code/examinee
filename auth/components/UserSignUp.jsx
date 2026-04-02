@@ -1,3 +1,4 @@
+"use client";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -37,9 +38,9 @@ const UserSignUp = ({ setState }) => {
           password,
           redirect: false,
         });
-
+        console.log("SIGNIN RESULT:", signInResult);
         if (signInResult?.ok) {
-          router.push("/");
+          router.push("/dashboard");
           router.refresh();
         } else {
           setError(

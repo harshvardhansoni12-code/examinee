@@ -1,6 +1,6 @@
 "use client";
-import UserSignUp from "../../../auth/components/UserSignUp.jsx";
-import UserSignIn from "../../../auth/components/UserSignIn.jsx";
+import UserSignUp from "./UserSignUp.jsx";
+import UserSignIn from "./UserSignIn.jsx";
 import { useState } from "react";
 export const AuthScreen = () => {
   const [state, setState] = useState(true);

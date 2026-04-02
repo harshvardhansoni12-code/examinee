@@ -1,5 +1,4 @@
 import { Geist, Geist_Mono } from "next/font/google";
-import { AuthScreen } from "./authpage/AuthScreen.jsx";
 import { NavBar } from "../../landing-page/components/navbar/navbar.jsx";
 import { Providers } from "./providers.jsx";
 import "./globals.css";
@@ -20,12 +19,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${geistSans.className}  h-full antialiased`}>
-      <body className="min-h-full flex flex-col">
-        <NavBar />
-        <div className="flex items-center justify-center min-h-screen">
-          <AuthScreen />
-        </div>
-        <Providers>{children}</Providers>
+      <body>
+        <div className="flex min-h-screen"></div>
+        <Providers>
+          <NavBar />
+          {children}
+        </Providers>
       </body>
     </html>
   );
