@@ -27,9 +27,12 @@ const UserSignIn = ({ setState }) => {
         setLoading(false);
         router.push("/dashboard");
         router.refresh();
+      } else {
+        setError(result?.error || "Invalid email or password");
       }
     } catch (error) {
-      setError(result?.error || "An unexpected error occurred");
+      router.push("/authpage");
+      router.refresh();
       setLoading(false);
     }
   };

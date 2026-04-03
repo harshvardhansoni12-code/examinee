@@ -17,4 +17,14 @@ model User {
   email String  @unique
   fullname  String?
   password String
+
+  pdfs Pdf[]
+}
+
+model Pdf{
+ id        Int      @id @default(autoincrement())
+  fileUrl   String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
 }
