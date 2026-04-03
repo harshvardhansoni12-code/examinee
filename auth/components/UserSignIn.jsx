@@ -17,16 +17,19 @@ const UserSignIn = ({ setState }) => {
     e.preventDefault();
     setLoading(true);
     setError("");
-    const result = await signIn("credentials", {
-      email,
-      password,
-    });
-    if (result?.ok) {
-      setLoading(true);
-      router.push("/");
-      setLoading(false);
-    } else {
-      setError("An unexpected error occurred");
+    try {
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+      if (result?.ok) {
+        setLoading(false);
+        router.push("/dashboard");
+        router.refresh();
+      }
+    } catch (error) {
+      setError(result?.error || "An unexpected error occurred");
       setLoading(false);
     }
   };

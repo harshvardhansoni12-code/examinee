@@ -1,11 +1,19 @@
 "use client";
-
-import { BackGround } from "../../landing-page/components/background.jsx";
-// import { NavBar } from "../../landing-page/components/navbar/navbar.jsx";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 export default function Home() {
-  const { session } = useSession();
+  const { session, status } = useSession();
   const router = useRouter();
-  return session ? router.push("/dashboard") : router.push("/authpage");
+  useEffect(() => {
+    if (status === "loading") return;
+    if (session) {
+      router.push("/dashboard");
+      router.refresh();
+    } else {
+      router.push("/authpage");
+      router.refresh();
+    }
+  }, [session, status, router]);
+  return <div></div>;
 }

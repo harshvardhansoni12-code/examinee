@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import { NavBar } from "../../landing-page/components/navbar/navbar.jsx";
 import { Providers } from "./providers.jsx";
+import { Background } from "../../landing-page/components/background.jsx";
 import "./globals.css";
 const geistSans = Geist({
   subsets: ["latin"],
@@ -19,9 +20,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${geistSans.className}  h-full antialiased`}>
-      <body>
-        <div className="flex min-h-screen"></div>
+      <body className="pt-40">
         <Providers>
+          <Background />
           <NavBar />
           {children}
         </Providers>

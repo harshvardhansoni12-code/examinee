@@ -1,11 +1,20 @@
-// import { InputBar } from "../../landing-page/components/inputbar.jsx";
-// import { TypewriterEffect } from "@/components/ui/typewriter-effect";
-// import { AuthScreen } from "./authpage/AuthScreen.jsx";
-
+"use client";
+import { InputBar } from "../../../landing-page/components/inputbar.jsx";
+import LandingOptions from "../../../landing-page/components/landing-options";
 export default function Dashboard() {
   return (
-    <div className="flex items-center justify-center">
-      <div className="text-4xl font-bold">Welcome to the Dashboard!</div>
+    <div>
+      <div className="flex items-center justify-center">
+        <div className="text-4xl font-bold mb-20">
+          Welcome to your Dashboard!
+        </div>
+      </div>
+      <div className="mb-10">
+        <LandingOptions />
+      </div>
+      <div className="flex justify-center">
+        <InputBar />
+      </div>
     </div>
   );
 }
