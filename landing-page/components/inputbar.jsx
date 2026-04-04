@@ -14,10 +14,12 @@ export const InputBar = () => {
   };
 
   return (
-    <div className="flex">
-      <Button className="h-13 ml-1 mr-1 rounded-full" onClick={DesktopClick}>
-        <Plus className="size-6 text-white" />
-      </Button>
+    <div className="flex gap-1 justify-center items-center">
+      <div>
+        <Button className="h-11 rounded-full" onClick={DesktopClick}>
+          <Plus className="size-6 text-white" />
+        </Button>
+      </div>
       <div>
         <Input
           ref={fileRef}
@@ -27,9 +29,6 @@ export const InputBar = () => {
           className="bg-white h-12 w-100 rounded-3xl b"
         />
       </div>
-      <Button className="h-12 ml-1 rounded-full">
-        <Search className="size-7 text-white" />
-      </Button>
     </div>
   );
 };

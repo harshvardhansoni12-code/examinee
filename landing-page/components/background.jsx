@@ -8,12 +8,12 @@ export const Background = () => {
   return (
     <div className="">
       <Code className="absolute top-12 left-8 text-pink-300 size-14 opacity-30 animate-float" />
-
+      <AlarmClockCheck className="absolute top-[32%] right-[68%]  text-purple-300 size-16 opacity-30 animate-float" />
       <TriangleRight className="absolute top-[22%] right-[18%] text-green-200 size-16 opacity-30 animate-float" />
 
       <GraduationCap className="absolute bottom-[18%] left-[28%] text-amber-300 size-14 opacity-30 animate-float" />
 
-      <NotebookTabs className="absolute top-[48%] right-[35%] text-purple-300 size-12 opacity-30 animate-float" />
+      <NotebookTabs className="absolute top-[48%] right-[25%] text-purple-300 size-12 opacity-30 animate-float" />
 
       <AlarmClockCheck className="absolute bottom-10 right-10 text-pink-300 size-16 opacity-30 animate-float" />
 

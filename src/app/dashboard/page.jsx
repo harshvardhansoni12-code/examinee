@@ -2,6 +2,7 @@
 import { TypewriterEffect } from "../../components/ui/typewriter-effect";
 import { InputBar } from "../../../landing-page/components/inputbar.jsx";
 import LandingOptions from "../../../landing-page/components/landing-options";
+import { OptionsButtons } from "../../../landing-page/components/option-buttons";
 export default function Dashboard() {
   return (
     <div>
@@ -15,6 +16,9 @@ export default function Dashboard() {
       </div>
       <div className="flex justify-center">
         <InputBar />
+      </div>
+      <div className="flex justify-center mt-10 gap-5">
+        <OptionsButtons />
       </div>
     </div>
   );
