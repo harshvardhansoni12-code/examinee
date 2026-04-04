@@ -5,7 +5,7 @@ import { motion, stagger, useAnimate, useInView } from "motion/react";
 import { useEffect } from "react";
 
 export const TypewriterEffect = ({
-  words = [{ text: "AI Powered Exam Helper" }],
+  words = [{ text: "AI-Powered Exam Helper" }],
   className,
   cursorClassName,
 }) => {
