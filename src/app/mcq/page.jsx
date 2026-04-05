@@ -1,5 +1,3 @@
-import { q } from "framer-motion/client";
-
 export default function Mcq({ pdf, setPdf }) {
   const uploadPdf = async () => {
     if (!pdf) {
