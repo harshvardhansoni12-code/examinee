@@ -1,16 +1,17 @@
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Search, Plus } from "lucide-react";
-import { useRef, useState } from "react";
-export const InputBar = () => {
+import { Input } from "../../src/components/ui/input";
+import { Button } from "../../src/components/ui/button";
+import { Plus } from "lucide-react";
+import { useRef } from "react";
+export const InputBar = ({ pdf, setPdf }) => {
   const fileRef = useRef(null);
   const DesktopClick = () => {
     fileRef.current.click();
   };
 
   const handleFileChange = (e) => {
-    const file = e.target.files[(0, 1)];
+    const file = e.target.files[0];
     if (!file) return;
+    setPdf(file);
   };
 
   return (
@@ -21,13 +22,15 @@ export const InputBar = () => {
         </Button>
       </div>
       <div>
-        <Input
-          ref={fileRef}
-          onChange={handleFileChange}
-          type="file"
-          placeholder="Upload Your Pdf"
-          className="bg-white h-12 w-100 rounded-3xl b"
-        />
+        <form>
+          <Input
+            ref={fileRef}
+            onChange={handleFileChange}
+            type="file"
+            placeholder="Upload Your Pdf"
+            className="bg-white h-12 w-100 rounded-3xl"
+          />
+        </form>
       </div>
     </div>
   );

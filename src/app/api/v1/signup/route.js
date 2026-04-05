@@ -4,9 +4,7 @@ export async function POST(req) {
   try {
     const body = await req.json();
 
-    // Strict validation
     const { fullname, email, password } = body;
-    console.log("PRISMA:", prisma);
     const userFound = await prisma.user.findUnique({
       where: {
         email: email,
@@ -27,7 +25,6 @@ export async function POST(req) {
       },
     });
 
-    // Return success without sensitive data
     return Response.json(
       {
         message: "User created successfully",
@@ -36,21 +33,6 @@ export async function POST(req) {
       { status: 201 },
     );
   } catch (error) {
-    console.error("Signup error:", error);
-    console.error("Error code:", error.code);
-    console.error("Error meta:", error.meta);
-
-    // Return different error messages based on error type
-    if (error.code === "ECONNREFUSED") {
-      return Response.json(
-        {
-          message:
-            "Database connection failed. Please check your DATABASE_URL.",
-        },
-        { status: 503 },
-      );
-    }
-
     return Response.json({ message: "Internal Server Error" }, { status: 500 });
   }
 }

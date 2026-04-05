@@ -1,8 +1,8 @@
 "use client";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { Input } from "../../src/components/ui/input";
+import { Button } from "../../src/components/ui/button";
+import { Separator } from "../../src/components/ui/separator";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";

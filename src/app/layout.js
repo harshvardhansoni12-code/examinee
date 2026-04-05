@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { NavBar } from "../../landing-page/components/navbar/navbar.jsx";
 import { Providers } from "./providers.jsx";
 import { Background } from "../../landing-page/components/background.jsx";
+import { Toaster } from "react-hot-toast";
 import "./globals.css";
 const geistSans = Geist({
   subsets: ["latin"],
@@ -22,6 +23,7 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${geistSans.className}  h-full antialiased`}>
       <body className="pt-40">
         <Providers>
+          <Toaster />
           <Background />
           <NavBar />
           {children}
