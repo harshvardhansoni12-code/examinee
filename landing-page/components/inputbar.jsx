@@ -12,8 +12,10 @@ export const InputBar = ({ pdf, setPdf }) => {
     const file = e.target.files[0];
     if (!file) return;
     setPdf(file);
+    //
   };
 
+  //
   return (
     <div className="flex gap-1 justify-center items-center">
       <div>

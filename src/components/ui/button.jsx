@@ -17,8 +17,9 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
         link: "text-primary underline-offset-4 hover:underline",
-        mcq: "text-gray-400 rounded-2xl w-22 h-10 bg-red-300",
-        cards: "text-gray-400 rounded-2xl w-22 h-10 bg-pink-200",
+        mcq: "text-gray-400 rounded-3xl w-22 h-10 bg-red-300",
+        summary: "text-gray-400 rounded-3xl w-22 h-10 bg-pink-200",
+        cards: "text-gray-400 rounded-3xl w-22 h-10 bg-green-200",
       },
       size: {
         default:

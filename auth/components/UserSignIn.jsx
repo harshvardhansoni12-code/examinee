@@ -31,9 +31,9 @@ const UserSignIn = ({ setState }) => {
         setError(result?.error || "Invalid email or password");
       }
     } catch (error) {
+      setLoading(false);
       router.push("/authpage");
       router.refresh();
-      setLoading(false);
     }
   };
 
