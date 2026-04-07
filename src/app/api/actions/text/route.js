@@ -1,15 +1,7 @@
 export const runtime = "nodejs";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../../auth/[...nextauth]/route";
 export async function POST(req) {
   try {
     console.log("=== PDF Processing Started ===");
-
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return Response.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const userId = session.user.id;
 
     const formData = await req.formData();
     const file = formData.get("file");
@@ -40,12 +32,16 @@ export async function POST(req) {
         }
 
         if (!item) {
+          const cleanedText = fullText
+            .replace(/\s+/g, " ")
+            .replace(/\n+/g, "\n")
+            .trim();
           resolve(
             Response.json({
               success: true,
               pages: pageCount,
-              preview: fullText.slice(0, 500),
-              fullText,
+              preview: cleanedText.slice(0, 500),
+              cleanedText,
             }),
           );
           return;
@@ -57,7 +53,7 @@ export async function POST(req) {
         }
 
         if (item.text) {
-          fullText += item.text + " ";
+          fullText += item.text + "\n";
         }
       });
     });
