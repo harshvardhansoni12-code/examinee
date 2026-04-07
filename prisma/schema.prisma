@@ -17,14 +17,12 @@ model User {
   email String  @unique
   fullname  String?
   password String
-
-  pdfs Pdf[]
+  text Text[]
 }
 
-model Pdf{
- id        Int      @id @default(autoincrement())
-  fileUrl   String
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
+model Text {
+  id Int   @id @default(autoincrement())
+  text String 
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId Int // FOREIGN KEY
 }

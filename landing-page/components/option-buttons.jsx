@@ -8,7 +8,7 @@ export const OptionsButtons = ({ pdf }) => {
   //
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const uploadPdf = async () => {
+  const Texthandler = async () => {
     try {
       setLoading(true);
       if (!pdf) {
@@ -23,7 +23,7 @@ export const OptionsButtons = ({ pdf }) => {
 
       const response = await fetch("/api/actions/text", {
         method: "POST",
-        body: formData, // Don't set Content-Type header, let browser set it with boundary
+        body: formData,
       });
       const data = await response.json();
       console.log(data);
@@ -40,11 +40,43 @@ export const OptionsButtons = ({ pdf }) => {
       setLoading(false);
     }
   };
+  // const Texthandler = async () => {
+  //   try {
+  //     setLoading(true);
+  //     if (!pdf) {
+  //       toast.error("please select the pdf");
+  //       setLoading(false);
+  //       return;
+  //     }
+
+  //     // Create FormData and send the actual file
+  //     const formData = new FormData();
+  //     formData.append("file", pdf);
+
+  //     const response = await fetch("/api/actions/text", {
+  //       method: "POST",
+  //       body: formData,
+  //     });
+  //     const data = await response.json();
+  //     console.log(data);
+  //     if (!response.ok) {
+  //       throw new Error(data.error || "Upload failed");
+  //     }
+
+  //     toast.success("PDF processed successfully!");
+  //     router.push("/cards");
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.error(error);
+  //     toast.error(error.message || "Something went wrong");
+  //     setLoading(false);
+  //   }
+  // };
   //
   return (
     <div className="flex justify-center items-center max-w-72 gap-20">
       <div className=" flex items-center">
-        <Button variant={"mcq"} disabled={loading} onClick={uploadPdf}>
+        <Button variant={"mcq"} disabled={loading} onClick={Texthandler}>
           Mcq
         </Button>
       </div>
