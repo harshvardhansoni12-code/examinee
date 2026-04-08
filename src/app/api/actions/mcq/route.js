@@ -1,11 +1,11 @@
 export const runtime = "nodejs";
 
 import { getServerSession } from "next-auth";
-import { extractAndStoreText } from "@/lib/pdfService";
-
+import { extractAndStoreText } from "../../../../lib/pdfService";
+import { prisma } from "../../../../lib/prisma";
 export async function POST(req) {
   try {
-    const session = getServerSession();
+    const session = await getServerSession();
     if (!session || !session.user) {
       return Response.json("error unauthorized", { status: 401 });
     }
@@ -20,8 +20,16 @@ export async function POST(req) {
     const textFounded = await prisma.text.findUnique({
       where: { id: textId },
     });
+    if (!textFounded) {
+      return Response.json({ error: "Text not found" }, { status: 404 });
+    }
     const text = textFounded.text;
-    console.log(`${text}`);
+    console.log(text);
+    return Response.json({
+      success: true,
+      textId,
+      preview: text.slice(0, 300),
+    });
   } catch (e) {
     console.error(e);
     return Response.json(

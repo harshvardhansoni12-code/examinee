@@ -24,7 +24,7 @@ export const extractAndStoreText = async (buffer, userId) => {
               text: cleanedText,
               author: {
                 connect: {
-                  email: userId, // change to id if needed
+                  email: userId,
                 },
               },
             },
