@@ -18,6 +18,7 @@ model User {
   fullname  String?
   password String
   text Text[]
+  mcq Mcq[]
 }
 
 model Text {
@@ -25,4 +26,14 @@ model Text {
   text String 
   author   User   @relation(fields: [authorId], references: [id])
   authorId Int // FOREIGN KEY
+   mcq Mcq[]
+}
+
+model Mcq{
+  id Int @id @default(autoincrement())
+  mcq Json
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId Int // FOREIGN KEY
+  text Text @relation(fields: [textId] , references: [id])
+  textId Int // foreign key
 }
