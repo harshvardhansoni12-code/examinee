@@ -1,3 +1,4 @@
+import { prisma } from "./prisma";
 export const getText = async ({ textId }) => {
   try {
     const textFounded = await prisma.text.findUnique({
