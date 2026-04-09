@@ -2,7 +2,8 @@ export const runtime = "nodejs";
 
 import { getServerSession } from "next-auth";
 import { extractAndStoreText } from "../../../../lib/pdfService";
-import { prisma } from "../../../../lib/prisma";
+import { getText } from "../../../../lib/getText";
+//import { prisma } from "../../../../lib/prisma";
 export async function POST(req) {
   try {
     const session = await getServerSession();
@@ -17,19 +18,20 @@ export async function POST(req) {
     }
     const buffer = Buffer.from(await file.arrayBuffer());
     const { textId } = await extractAndStoreText(buffer, userId);
-    const textFounded = await prisma.text.findUnique({
-      where: { id: textId },
-    });
-    if (!textFounded) {
-      return Response.json({ error: "Text not found" }, { status: 404 });
-    }
-    const text = textFounded.text;
-    console.log(text);
-    return Response.json({
-      success: true,
-      textId,
-      preview: text.slice(0, 300),
-    });
+    const { text } = await getText({ textId });
+    // const textFounded = await prisma.text.findUnique({
+    //   where: { id: textId },
+    // });
+    // if (!textFounded) {
+    //   return Response.json({ error: "Text not found" }, { status: 404 });
+    // }
+    // const text = textFounded.text;
+    // console.log(text);
+    // return Response.json({
+    //   success: true,
+    //   textId,
+    //   preview: text.slice(0, 300),
+    // });
   } catch (e) {
     console.error(e);
     return Response.json(
