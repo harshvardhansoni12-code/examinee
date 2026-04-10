@@ -73,7 +73,7 @@ Now generate questions from the following text:
           },
           text: {
             connect: {
-              Id: textId,
+              id: textId,
             },
           },
         },

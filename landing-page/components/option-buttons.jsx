@@ -22,7 +22,7 @@ export const OptionsButtons = ({ pdf }) => {
       const formData = new FormData();
       formData.append("file", pdf);
 
-      const response = await fetch("/api/actions/mcq", {
+      const response = await fetch("/api/actions/create-mcq", {
         method: "POST",
         body: formData,
       });
