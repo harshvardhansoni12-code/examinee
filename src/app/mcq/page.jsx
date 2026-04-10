@@ -1,8 +1,36 @@
-import { useEffect } from "react";
+"use client";
+import { useEffect, useState } from "react";
 
 export default function Mcq() {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
-    const fetchMcq = async () => {};
+    const fetchMcq = async () => {
+      setLoading(true);
+      const response = await fetch("/api/actions/get-mcq");
+      //  const data = await response.json();
+      if (!response.ok) {
+        throw new Error(response.error || "no mcq found");
+      }
+      const data = await response.json();
+      setData(Array.isArray(data) ? data : [data.mcqFound]);
+      setLoading(false);
+    };
+    fetchMcq();
   }, []);
-  return <div>this is mcq page!</div>;
+  return (
+    <>
+      {loading ? (
+        <div>loading....</div>
+      ) : (
+        <div>
+          {data.map((item) => (
+            <li key={item.id}>
+              <div>{item.mcq}</div>
+            </li>
+          ))}
+        </div>
+      )}
+    </>
+  );
 }
