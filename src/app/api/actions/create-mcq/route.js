@@ -18,10 +18,13 @@ export async function POST(req) {
     if (!file) {
       return Response.json({ error: "No file uploaded" }, { status: 400 });
     }
+    //
     const buffer = Buffer.from(await file.arrayBuffer());
     const { textId } = await extractAndStoreText(buffer, userId);
     const { text } = await getText({ textId });
-
+    if (!text) {
+      return Response.json({ error: "No text found" }, { status: 400 });
+    }
     if (text) {
       const prompt = `
 You are an expert teacher.

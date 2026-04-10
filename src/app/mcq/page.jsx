@@ -13,7 +13,7 @@ export default function Mcq() {
         throw new Error(response.error || "no mcq found");
       }
       const data = await response.json();
-      setData(Array.isArray(data) ? data : [data.mcqFound]);
+      setData(data);
       setLoading(false);
     };
     fetchMcq();
