@@ -27,6 +27,7 @@ export default function Mcq() {
           {data.map((item) => (
             <li key={item.id}>
               <div>{item.mcq}</div>
+              <br />
             </li>
           ))}
         </div>
