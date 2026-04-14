@@ -9,7 +9,7 @@ export const OptionsButtons = ({ pdf }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const Texthandler = async () => {
+  const Cardhandler = async () => {
     try {
       setLoading(true);
       if (!pdf) {
@@ -22,7 +22,7 @@ export const OptionsButtons = ({ pdf }) => {
       const formData = new FormData();
       formData.append("file", pdf);
 
-      const response = await fetch("/api/actions/create-mcq", {
+      const response = await fetch("/api/actions/create-cards", {
         method: "POST",
         body: formData,
       });
@@ -41,6 +41,39 @@ export const OptionsButtons = ({ pdf }) => {
       setLoading(false);
     }
   };
+  const Summaryhandler = async () => {
+    try {
+      setLoading(true);
+      if (!pdf) {
+        toast.error("please select the pdf");
+        setLoading(false);
+        return;
+      }
+
+      // Create FormData and send the actual file
+      const formData = new FormData();
+      formData.append("file", pdf);
+
+      const response = await fetch("/api/actions/create-summary", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await response.json();
+      console.log(data);
+      if (!response.ok) {
+        throw new Error(data.error || "Upload failed");
+      }
+
+      toast.success("PDF processed successfully!");
+      router.push("/mcq");
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message || "Something went wrong");
+      setLoading(false);
+    }
+  };
+
   //
   return (
     <div className="flex justify-center items-center max-w-72 gap-20">
@@ -50,12 +83,12 @@ export const OptionsButtons = ({ pdf }) => {
         </Button>
       </div>
       <div className="flex items-center">
-        <Button variant={"cards"} disabled={loading}>
+        <Button variant={"cards"} disabled={loading} onClick={Cardhandler}>
           Cards
         </Button>
       </div>
       <div className="flex items-center">
-        <Button variant={"summary"} disabled={loading}>
+        <Button variant={"summary"} disabled={loading} onClick={Summaryhandler}>
           summary
         </Button>
       </div>

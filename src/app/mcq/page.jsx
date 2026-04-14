@@ -8,7 +8,6 @@ export default function Mcq() {
     const fetchMcq = async () => {
       setLoading(true);
       const response = await fetch("/api/actions/get-mcq");
-      //  const data = await response.json();
       if (!response.ok) {
         throw new Error(response.error || "no mcq found");
       }
