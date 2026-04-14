@@ -4,14 +4,6 @@ export async function GET(req) {
   const session = await getServerSession();
 
   const summaryFound = await prisma.summary.findFirst({
-    // where: {
-    //   author: {
-    //     email: session.user.email,
-    //   },
-    // },
-    // orderBy: {
-    //   id: "desc", // latest
-    // },
     where: {
       author: {
         email: session.user.email,
@@ -22,7 +14,7 @@ export async function GET(req) {
     },
   });
   if (!summaryFound) {
-    return Response.json("mcq not found", { status: 400 });
+    return Response.json("summary not found", { status: 400 });
   }
   return Response.json([summaryFound], { status: 200 });
 }

@@ -14,7 +14,7 @@ export async function GET(req) {
     },
   });
   if (!cardFound) {
-    return Response.json("mcq not found", { status: 400 });
+    return Response.json("card not found", { status: 400 });
   }
   return Response.json([cardFound], { status: 200 });
 }

@@ -34,6 +34,7 @@ export const OptionsButtons = ({ pdf }) => {
       toast.success("PDF processed successfully!");
       router.push("/mcq");
       setLoading(false);
+      router.refresh();
     } catch (error) {
       console.error(error);
       toast.error(error.message || "Something went wrong");
@@ -67,6 +68,7 @@ export const OptionsButtons = ({ pdf }) => {
       toast.success("PDF processed successfully!");
       router.push("/revision-cards");
       setLoading(false);
+      router.refresh();
     } catch (error) {
       console.error(error);
       toast.error(error.message || "Something went wrong");
@@ -101,6 +103,7 @@ export const OptionsButtons = ({ pdf }) => {
       toast.success("PDF processed successfully!");
       router.push("/summary");
       setLoading(false);
+      router.refresh();
     } catch (error) {
       console.error(error);
       toast.error(error.message || "Something went wrong");
