@@ -57,9 +57,9 @@ Text:${text}
       const result = await model.generateContent(prompt);
       const response = result.response.text();
       console.log("RESULT:", response);
-      const mcqCreated = await prisma.mcq.create({
+      const summaryCreated = await prisma.summary.create({
         data: {
-          mcq: response,
+          summary: response,
           author: {
             connect: {
               email: userId,
@@ -72,7 +72,7 @@ Text:${text}
           },
         },
       });
-      if (!mcqCreated) {
+      if (!summaryCreated) {
         return Response.json("mcq not create", { status: 401 });
       }
       return Response.json({ response: response });

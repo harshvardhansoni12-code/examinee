@@ -3,7 +3,7 @@ import { prisma } from "../../../../lib/prisma";
 export async function GET(req) {
   const session = await getServerSession();
 
-  const mcqFound = await prisma.cards.findFirst({
+  const cardFound = await prisma.cards.findFirst({
     where: {
       author: {
         email: session.user.email,
@@ -13,8 +13,8 @@ export async function GET(req) {
       id: "desc", // latest
     },
   });
-  if (!mcqFound) {
+  if (!cardFound) {
     return Response.json("mcq not found", { status: 400 });
   }
-  return Response.json([mcqFound], { status: 200 });
+  return Response.json([cardFound], { status: 200 });
 }

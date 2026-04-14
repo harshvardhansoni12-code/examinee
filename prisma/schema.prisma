@@ -43,7 +43,7 @@ model Mcq{
 }
 model Cards{
   id Int @id @default(autoincrement())
-  mcq Json
+  cards Json
   author   User   @relation(fields: [authorId], references: [id])
   authorId Int // FOREIGN KEY
   text Text @relation(fields: [textId] , references: [id])
@@ -52,7 +52,7 @@ model Cards{
 
 model Summary{
   id Int @id @default(autoincrement())
-  mcq Json
+  summary Json
   author   User   @relation(fields: [authorId], references: [id])
   authorId Int // FOREIGN KEY
   text Text @relation(fields: [textId] , references: [id])
