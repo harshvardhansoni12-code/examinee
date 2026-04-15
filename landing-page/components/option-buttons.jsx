@@ -37,7 +37,7 @@ export const OptionsButtons = ({ pdf }) => {
       router.refresh();
     } catch (error) {
       console.error(error);
-      toast.error(error.message || "Something went wrong");
+      toast.error("Something went wrong");
       setLoading(false);
     }
   };
@@ -71,7 +71,7 @@ export const OptionsButtons = ({ pdf }) => {
       router.refresh();
     } catch (error) {
       console.error(error);
-      toast.error(error.message || "Something went wrong");
+      toast.error("Something went wrong");
       setLoading(false);
     }
   };
@@ -106,7 +106,7 @@ export const OptionsButtons = ({ pdf }) => {
       router.refresh();
     } catch (error) {
       console.error(error);
-      toast.error(error.message || "Something went wrong");
+      toast.error("Something went wrong ");
       setLoading(false);
     }
   };
