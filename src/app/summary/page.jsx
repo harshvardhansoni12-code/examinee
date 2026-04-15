@@ -8,7 +8,7 @@ export default function Summary() {
       setLoading(true);
       const response = await fetch("/api/actions/get-summary");
       if (!response.ok) {
-        throw new Error(response.error || "no mcq found");
+        throw new Error("no summary found");
       }
       const data = await response.json();
       setData(data);

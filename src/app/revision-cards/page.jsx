@@ -9,7 +9,7 @@ export default function Cards() {
       setLoading(true);
       const response = await fetch("/api/actions/get-cards");
       if (!response.ok) {
-        throw new Error(response.error || "no mcq found");
+        throw new Error("no cards found");
       }
       const data = await response.json();
       setData(data);
