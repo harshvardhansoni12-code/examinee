@@ -52,6 +52,7 @@ JSON structure:
 }
 
 Rules:
+- Number of questions should be always 10
 - Each question must have exactly 4 options
 - Only ONE correct answer per question
 - Do not repeat similar questions

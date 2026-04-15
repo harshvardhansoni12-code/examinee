@@ -26,22 +26,25 @@ export async function POST(req) {
       return Response.json({ error: "No text found" }, { status: 400 });
     }
     if (text) {
-      const prompt = `Convert the following text into exactly 5 concise revision cards.
+      const prompt = `
+Convert the following text into EXACTLY 5 revision cards in JSON format.
 
-Guidelines:
+Return ONLY valid JSON. No extra text.
 
-Each card should have a clear title.
-Include key points only (bullet format preferred).
-Keep content short, crisp, and easy to revise.
-Highlight important terms, definitions, or formulas.
-Avoid unnecessary explanations or long sentences.
-Make each card focused on one subtopic.
+Format:
+[
+  {
+    "title": "string",
+    "points": ["point1", "point2", "point3"]
+  }
+]
 
-Text:${text}
+Text:
+${text}
 `;
       //gemini-2.5-flash
       const model = genAI.getGenerativeModel({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
       });
       const result = await model.generateContent(prompt);
       const response = result.response.text();

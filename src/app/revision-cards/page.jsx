@@ -6,31 +6,34 @@ export default function Cards() {
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     const fetchCards = async () => {
-      setLoading(true);
-      const response = await fetch("/api/actions/get-cards");
-      if (!response.ok) {
-        throw new Error("no cards found");
+      try {
+        setLoading(true);
+        const response = await fetch("/api/actions/get-cards");
+        if (!response.ok) {
+          throw new Error("no cards found");
+        }
+        const data = await response.json();
+        setData(data);
+        setLoading(false);
+      } catch (e) {
+        console.error("Invalid JSON:", item.cards);
       }
-      const data = await response.json();
-      setData(data);
-      setLoading(false);
     };
     fetchCards();
   }, []);
+  //
   return (
     <div>
-      {" "}
       {loading ? (
-        <div>loading....</div>
+        <>loading...</>
       ) : (
-        <div>
-          {data.map((item) => (
-            <li key={item.id}>
-              <div>{item.cards}</div>
-              <br />
-            </li>
+        <>
+          {data.map((card, index) => (
+            <div key={index}>
+              <h2>{card.title}</h2>
+            </div>
           ))}
-        </div>
+        </>
       )}
     </div>
   );
