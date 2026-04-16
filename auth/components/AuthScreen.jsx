@@ -2,6 +2,8 @@
 import UserSignUp from "./UserSignUp.jsx";
 import UserSignIn from "./UserSignIn.jsx";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 export const AuthScreen = () => {
   const [state, setState] = useState(true);
   return (

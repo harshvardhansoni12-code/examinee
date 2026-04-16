@@ -28,11 +28,41 @@ export default function Cards() {
         <>loading...</>
       ) : (
         <>
-          {data.map((card, index) => (
-            <div key={index}>
-              <h2>{card.title}</h2>
-            </div>
-          ))}
+          {data.map((item) => {
+            let cardsArray = [];
+
+            if (Array.isArray(item.cards)) {
+              cardsArray = item.cards;
+            } else if (typeof item.cards === "string") {
+              try {
+                const cleaned = item.cards
+                  .replace(/```json/g, "")
+                  .replace(/```/g, "")
+                  .trim();
+
+                cardsArray = JSON.parse(cleaned);
+              } catch (e) {
+                console.error("Parse failed:", item.cards);
+              }
+            }
+
+            return cardsArray.map((card, i) => (
+              <div
+                key={i}
+                className="flex flex-1 items-center justify-center min-h-screen"
+              >
+                <div className="h-90 w-60 bg-gray-200 items-center p-2 rounded-2xl">
+                  <h2>{card.title}</h2>
+
+                  <ul className="p-2">
+                    {card.points?.map((p, j) => (
+                      <li key={j}>{p}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            ));
+          })}
         </>
       )}
     </div>

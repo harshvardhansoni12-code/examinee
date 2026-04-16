@@ -49,9 +49,16 @@ ${text}
       const result = await model.generateContent(prompt);
       const response = result.response.text();
       console.log("RESULT:", response);
+      const raw = result.response.text();
+
+      const cleaned = raw
+        .replace(/```json/g, "")
+        .replace(/```/g, "")
+        .trim();
+
       const cardCreated = await prisma.cards.create({
         data: {
-          cards: response,
+          cards: JSON.parse(cleaned),
           author: {
             connect: {
               email: userId,

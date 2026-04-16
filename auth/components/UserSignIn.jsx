@@ -70,7 +70,13 @@ const UserSignIn = ({ setState }) => {
         <Button className="w-full" variant="outline">
           Login with Google
         </Button>
-        <Button className="w-full" variant="outline">
+        <Button
+          className="w-full"
+          variant="outline"
+          onClick={() => {
+            signIn("github", { callbackUrl: "/dashboard" });
+          }}
+        >
           Login with Github
         </Button>
         <div className="flex justify-center items-center">
