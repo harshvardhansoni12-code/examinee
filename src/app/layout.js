@@ -21,7 +21,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${geistSans.className}  h-full antialiased`}>
-      <body className="pt-40">
+      <body className="pt-6">
         <Providers>
           <Toaster />
           <Background />

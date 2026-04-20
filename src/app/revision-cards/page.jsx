@@ -23,7 +23,7 @@ export default function Cards() {
   }, []);
   //
   return (
-    <div>
+    <div className="flex justify-between items-center gap-2">
       {loading ? (
         <>loading...</>
       ) : (
@@ -47,11 +47,8 @@ export default function Cards() {
             }
 
             return cardsArray.map((card, i) => (
-              <div
-                key={i}
-                className="flex flex-1 items-center justify-center min-h-screen"
-              >
-                <div className="h-90 w-60 bg-gray-200 items-center p-2 rounded-2xl">
+              <div key={i} className="">
+                <div className="h-90 w-60 bg-gray-200 p-2 rounded-2xl">
                   <h2>{card.title}</h2>
 
                   <ul className="p-2">

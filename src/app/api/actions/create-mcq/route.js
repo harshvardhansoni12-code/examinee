@@ -27,48 +27,69 @@ export async function POST(req) {
     }
     if (text) {
       const prompt = `
-You are an expert teacher.
-
-Generate high-quality multiple choice questions (MCQs) from the given ${text}.
+You are an expert teacher. Generate high-quality multiple choice questions (MCQs).
 
 Instructions:
-- Create exactly 5 questions
+- Create exactly 10 questions from the given text
 - Each question must test understanding, not just memorization
 - Avoid very easy or trivial questions
 - Focus on important concepts only
 
-Format:
-Return ONLY valid JSON. Do not include any explanation or extra text.
+CRITICAL: Return ONLY a valid JSON object. Do not wrap in markdown code blocks. Do not add any explanation before or after.
 
-JSON structure:
+Required JSON format:
 {
   "questions": [
     {
-      "question": "string",
-      "options": ["A", "B", "C", "D"],
-      "correctAnswer": "exact option text"
+      "question": "What is the capital of France?",
+      "options": ["Paris", "London", "Berlin", "Madrid"],
+      "correctAnswer": "Paris"
+    },
+    {
+      "question": "Second question here?",
+      "options": ["Option A", "Option B", "Option C", "Option D"],
+      "correctAnswer": "Option B"
     }
   ]
 }
 
 Rules:
-- Number of questions should be always 10
-- Each question must have exactly 4 options
+- Must generate exactly 10 questions
+- Each question must have exactly 4 options in an array
+- correctAnswer must match exactly one of the 4 options
 - Only ONE correct answer per question
 - Do not repeat similar questions
 - Keep options clear and distinct
 - Do not include numbering like "Q1", "Q2"
-- Do not include markdown or backticks
+- Do not use markdown formatting, backticks, or code blocks
 
-Now generate questions from the following text:
+Text to generate questions from:
+${text}
+
+Remember: Return ONLY the JSON object, nothing else.
 `;
       //gemini-2.5-flash
       const model = genAI.getGenerativeModel({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-lite",
       });
       const result = await model.generateContent(prompt);
-      const response = result.response.text();
-      console.log("RESULT:", response);
+      let response = result.response.text();
+      console.log("Raw RESULT:", response);
+      
+      // Clean the response - remove markdown code blocks and extra whitespace
+      response = response.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+      
+      // Try to parse the JSON to validate it
+      let parsedMcq;
+      try {
+        parsedMcq = JSON.parse(response);
+        console.log("Parsed MCQ count:", parsedMcq.questions ? parsedMcq.questions.length : 0);
+      } catch (parseError) {
+        console.error("JSON parse error:", parseError);
+        console.error("Response that failed to parse:", response);
+        return Response.json({ error: "Failed to parse AI response" }, { status: 500 });
+      }
+      
       const mcqCreated = await prisma.mcq.create({
         data: {
           mcq: response,
@@ -87,7 +108,11 @@ Now generate questions from the following text:
       if (!mcqCreated) {
         return Response.json("mcq not create", { status: 401 });
       }
-      return Response.json({ response: response });
+      return Response.json({ 
+        success: true,
+        data: parsedMcq,
+        mcqId: mcqCreated.id
+      });
     }
     //prefer gemini-2.5-flash
   } catch (e) {
