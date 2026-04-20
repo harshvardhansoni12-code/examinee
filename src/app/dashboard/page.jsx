@@ -8,7 +8,7 @@ export default function Dashboard() {
   const [pdf, setPdf] = useState();
   return (
     <div>
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center mt-30">
         <div className="text-4xl font-bold mb-20">
           <TypewriterEffect />
         </div>
