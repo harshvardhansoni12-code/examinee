@@ -13,17 +13,20 @@ export default function Mcq({ mcqData }) {
   // Parse MCQ data - handle JSON string from database or object from API
   const parseMcqData = (data) => {
     let questions = [];
-    
+
     // Helper function to clean and parse JSON string
     const cleanAndParseJson = (jsonString) => {
       if (typeof jsonString !== "string") return null;
-      
+
       // Remove markdown code blocks (```json or ```)
-      let cleaned = jsonString.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-      
+      let cleaned = jsonString
+        .replace(/```json\n?/g, "")
+        .replace(/```\n?/g, "")
+        .trim();
+
       // Remove any trailing backticks or whitespace
       cleaned = cleaned.replace(/`+$/, "").trim();
-      
+
       try {
         return JSON.parse(cleaned);
       } catch (e) {
@@ -31,7 +34,7 @@ export default function Mcq({ mcqData }) {
         return null;
       }
     };
-    
+
     // If data is an array of mcq objects from database
     if (Array.isArray(data)) {
       data.forEach((item) => {
@@ -44,7 +47,7 @@ export default function Mcq({ mcqData }) {
           questions = [...questions, ...item.mcq.questions];
         }
       });
-    } 
+    }
     // If data is already parsed object from API
     else if (data && data.questions && Array.isArray(data.questions)) {
       questions = data.questions;
@@ -53,16 +56,18 @@ export default function Mcq({ mcqData }) {
     else if (data && data.data && data.data.questions) {
       questions = data.data.questions;
     }
-    
+
     return questions;
   };
-  
+
   const questions = parseMcqData(mcqData);
-  
+
   if (questions.length === 0) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-gray-500 text-lg">No valid MCQs found. Please check your data.</p>
+        <p className="text-gray-500 text-lg">
+          No valid MCQs found. Please check your data.
+        </p>
       </div>
     );
   }
@@ -95,12 +100,12 @@ export default function Mcq({ mcqData }) {
 
   const handleSubmit = () => {
     if (selectedOption === null) return;
-    
+
     setIsSubmitted(true);
-    
+
     const selectedOptionText = currentMcq.options[selectedOption];
     const isCorrect = selectedOptionText === currentMcq.correctAnswer;
-    
+
     // Only increment score if this question hasn't been answered correctly before
     if (isCorrect && !answeredQuestions[currentIndex]) {
       setScore(score + 1);
@@ -109,32 +114,37 @@ export default function Mcq({ mcqData }) {
   };
 
   const getOptionClassName = (optionIndex) => {
-    const baseClasses = "w-full text-left p-4 rounded-lg border-2 transition-all duration-200 ";
-    
+    const baseClasses =
+      "w-full text-left p-4 rounded-lg border-2 transition-all duration-200 ";
+
     if (!isSubmitted) {
       // Before submit - show selected state
-      return baseClasses + (selectedOption === optionIndex
-        ? "border-blue-500 bg-blue-50"
-        : "border-gray-200 hover:border-gray-300 hover:bg-gray-50");
+      return (
+        baseClasses +
+        (selectedOption === optionIndex
+          ? "border-blue-500 bg-blue-50"
+          : "border-gray-200 hover:border-gray-300 hover:bg-gray-50")
+      );
     }
-    
+
     // After submit - show correct/incorrect
     const isSelected = selectedOption === optionIndex;
-    const isCorrect = currentMcq.options[optionIndex] === currentMcq.correctAnswer;
-    
+    const isCorrect =
+      currentMcq.options[optionIndex] === currentMcq.correctAnswer;
+
     if (isCorrect) {
       return baseClasses + "border-green-500 bg-green-50"; // Correct answer - green
     }
-    
+
     if (isSelected && !isCorrect) {
       return baseClasses + "border-red-500 bg-red-50"; // Selected wrong answer - red
     }
-    
+
     return baseClasses + "border-gray-200 opacity-50"; // Other options
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+    <div className="max-w-xl max-h-xl mx-auto p-6 bg-white rounded-lg shadow-lg">
       {/* Progress Indicator */}
       <div className="mb-6">
         <div className="flex justify-between items-center mb-2">
@@ -142,13 +152,16 @@ export default function Mcq({ mcqData }) {
             Question {currentIndex + 1} of {questions.length}
           </span>
           <span className="text-sm text-gray-500">
-            {Math.round(((currentIndex + 1) / questions.length) * 100)}% complete
+            {Math.round(((currentIndex + 1) / questions.length) * 100)}%
+            complete
           </span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2">
           <div
             className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-            style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }}
+            style={{
+              width: `${((currentIndex + 1) / questions.length) * 100}%`,
+            }}
           ></div>
         </div>
       </div>
@@ -186,19 +199,23 @@ export default function Mcq({ mcqData }) {
 
       {/* Answer Feedback */}
       {isSubmitted && (
-        <div className={`mb-6 p-4 rounded-lg border ${
-          currentMcq.options[selectedOption] === currentMcq.correctAnswer
-            ? "bg-green-50 border-green-200"
-            : "bg-red-50 border-red-200"
-        }`}>
-          <p className={`font-medium ${
+        <div
+          className={`mb-6 p-4 rounded-lg border ${
             currentMcq.options[selectedOption] === currentMcq.correctAnswer
-              ? "text-green-800"
-              : "text-red-800"
-          }`}>
+              ? "bg-green-50 border-green-200"
+              : "bg-red-50 border-red-200"
+          }`}
+        >
+          <p
+            className={`font-medium ${
+              currentMcq.options[selectedOption] === currentMcq.correctAnswer
+                ? "text-green-800"
+                : "text-red-800"
+            }`}
+          >
             {currentMcq.options[selectedOption] === currentMcq.correctAnswer
-              ? "✅ Correct!"
-              : "❌ Incorrect!"}
+              ? "Correct!"
+              : "Incorrect!"}
           </p>
           <p className="text-gray-700 mt-2">
             Correct Answer: {currentMcq.correctAnswer}
