@@ -21,6 +21,8 @@ model User {
   mcq Mcq[]
   cards Cards[]
   summary Summary[]
+  mcqResult McqResult[]
+
 }
 
 model Text {
@@ -31,6 +33,7 @@ model Text {
    mcq Mcq[]
    cards Cards[]
    summary Summary[]
+   mcqResult McqResult[]
 }
 
 model Mcq{
@@ -40,6 +43,7 @@ model Mcq{
   authorId Int // FOREIGN KEY
   text Text @relation(fields: [textId] , references: [id])
   textId Int // foreign key
+  mcqId McqResult[]
 }
 model Cards{
   id Int @id @default(autoincrement())
@@ -57,4 +61,15 @@ model Summary{
   authorId Int // FOREIGN KEY
   text Text @relation(fields: [textId] , references: [id])
   textId Int // foreign key
+}
+
+model McqResult {
+  id Int @default(autoincrement()) @unique
+  score Int 
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId Int
+  text Text @relation(fields: [textId] , references: [id])
+  textId Int 
+  mcq Mcq @relation(fields:[mcqId] , references: [id])
+  mcqId Int
 }
