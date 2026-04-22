@@ -7,6 +7,8 @@ export default function Mcq({ mcqData }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [showResult, setShowResult] = useState(false);
+
   const [score, setScore] = useState(0);
   const [answeredQuestions, setAnsweredQuestions] = useState({}); // Track which questions are answered correctly
 
@@ -76,6 +78,7 @@ export default function Mcq({ mcqData }) {
   const isFirst = currentIndex === 0;
   const isLast = currentIndex === questions.length - 1;
 
+  // Handler functions defined first
   const handlePrevious = () => {
     if (!isFirst) {
       setCurrentIndex(currentIndex - 1);
@@ -106,11 +109,26 @@ export default function Mcq({ mcqData }) {
     const selectedOptionText = currentMcq.options[selectedOption];
     const isCorrect = selectedOptionText === currentMcq.correctAnswer;
 
-    // Only increment score if this question hasn't been answered correctly before
     if (isCorrect && !answeredQuestions[currentIndex]) {
       setScore(score + 1);
       setAnsweredQuestions({ ...answeredQuestions, [currentIndex]: true });
     }
+
+    // If it's the last question, show result after a short delay
+    if (isLast) {
+      setTimeout(() => {
+        setShowResult(true);
+      }, 1500);
+    }
+  };
+
+  const handleRestart = () => {
+    setCurrentIndex(0);
+    setSelectedOption(null);
+    setIsSubmitted(false);
+    setShowResult(false);
+    setScore(0);
+    setAnsweredQuestions({});
   };
 
   const getOptionClassName = (optionIndex) => {
@@ -142,6 +160,58 @@ export default function Mcq({ mcqData }) {
 
     return baseClasses + "border-gray-200 opacity-50"; // Other options
   };
+
+  // Show result window if quiz is completed
+  if (showResult) {
+    const percentage = Math.round((score / questions.length) * 100);
+    let message = "";
+    let emoji = "";
+    
+    if (percentage >= 80) {
+      message = "Excellent work!";
+      emoji = "🎉";
+    } else if (percentage >= 60) {
+      message = "Good job!";
+      emoji = "👍";
+    } else if (percentage >= 40) {
+      message = "Keep practicing!";
+      emoji = "📚";
+    } else {
+      message = "Don't give up!";
+      emoji = "💪";
+    }
+
+    return (
+      <div className="max-w-xl mx-auto p-8 bg-white rounded-2xl shadow-xl text-center">
+        <div className="text-6xl mb-4">{emoji}</div>
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">Quiz Completed!</h2>
+        <p className="text-gray-600 mb-8">{message}</p>
+        
+        <div className="bg-red-200 rounded-xl p-6 mb-8">
+          <p className="text-white text-lg mb-2">Your Final Score</p>
+          <p className="text-white text-5xl font-bold">
+            {score} / {questions.length}
+          </p>
+          <p className="text-white/80 text-lg mt-2">{percentage}%</p>
+        </div>
+
+        <div className="flex gap-4 justify-center">
+          <Button
+            onClick={handleRestart}
+            variant="outline"
+            className="px-6 py-3"
+          >
+            Try Again
+          </Button>
+          <a href="/dashboard">
+            <Button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white">
+              Back to Dashboard
+            </Button>
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-xl max-h-xl mx-auto p-6 bg-white rounded-lg shadow-lg">
@@ -262,3 +332,4 @@ export default function Mcq({ mcqData }) {
     </div>
   );
 }
+
