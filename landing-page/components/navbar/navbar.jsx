@@ -17,9 +17,9 @@ export const NavBar = () => {
   };
 
   return (
-    <div className="fixed top-0 left-0 right-0 flex justify-between items-center h-14 p-1 bg-slate-100 z-50">
+    <div className="fixed top-0 left-0 right-0 flex justify-between items-center h-16 px-6 bg-white/60 backdrop-blur-md border-b border-orange-200/30 shadow-sm z-50 transition-all duration-300">
       <button
-        className=" text-3xl font-bold flex justify-center pl-1 hover:cursor-pointer"
+        className="text-2xl font-extrabold flex justify-center tracking-tight text-primary hover:opacity-80 transition-opacity hover:cursor-pointer"
         onClick={Logo}
       >
         Examinee

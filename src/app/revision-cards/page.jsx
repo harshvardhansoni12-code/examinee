@@ -8,15 +8,13 @@ export default function Cards() {
   // Array of different card background colors
   const cardColors = [
     "bg-gradient-to-br from-blue-100 to-blue-200 border-blue-300",
-    "bg-gradient-to-br from-green-100 to-green-200 border-green-300",
-    "bg-gradient-to-br from-yellow-100 to-yellow-200 border-yellow-300",
-    "bg-gradient-to-br from-pink-100 to-pink-200 border-pink-300",
-    "bg-gradient-to-br from-purple-100 to-purple-200 border-purple-300",
-    "bg-gradient-to-br from-orange-100 to-orange-200 border-orange-300",
-    "bg-gradient-to-br from-teal-100 to-teal-200 border-teal-300",
-    "bg-gradient-to-br from-red-100 to-red-200 border-red-300",
     "bg-gradient-to-br from-indigo-100 to-indigo-200 border-indigo-300",
+    "bg-gradient-to-br from-violet-100 to-violet-200 border-violet-300",
+    "bg-gradient-to-br from-purple-100 to-purple-200 border-purple-300",
     "bg-gradient-to-br from-cyan-100 to-cyan-200 border-cyan-300",
+    "bg-gradient-to-br from-teal-100 to-teal-200 border-teal-300",
+    "bg-gradient-to-br from-emerald-100 to-emerald-200 border-emerald-300",
+    "bg-gradient-to-br from-slate-100 to-slate-200 border-slate-300",
   ];
 
   useEffect(() => {

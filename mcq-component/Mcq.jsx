@@ -166,7 +166,7 @@ export default function Mcq({ mcqData }) {
     const percentage = Math.round((score / questions.length) * 100);
     let message = "";
     let emoji = "";
-    
+
     if (percentage >= 80) {
       message = "Excellent work!";
       emoji = "🎉";
@@ -184,11 +184,13 @@ export default function Mcq({ mcqData }) {
     return (
       <div className="max-w-xl mx-auto p-8 bg-white rounded-2xl shadow-xl text-center">
         <div className="text-6xl mb-4">{emoji}</div>
-        <h2 className="text-3xl font-bold text-gray-800 mb-2">Quiz Completed!</h2>
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">
+          Quiz Completed!
+        </h2>
         <p className="text-gray-600 mb-8">{message}</p>
-        
-        <div className="bg-red-200 rounded-xl p-6 mb-8">
-          <p className="text-white text-lg mb-2">Your Final Score</p>
+
+        <div className="bg-indigo-500 rounded-xl p-6 mb-8 shadow-md">
+          <p className="text-white/90 text-lg mb-2">Your Final Score</p>
           <p className="text-white text-5xl font-bold">
             {score} / {questions.length}
           </p>
@@ -214,9 +216,9 @@ export default function Mcq({ mcqData }) {
   }
 
   return (
-    <div className="max-w-xl max-h-xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+    <div className="max-w-xl w-full max-h-[85vh] flex flex-col mx-auto p-6 bg-white rounded-lg shadow-lg">
       {/* Progress Indicator */}
-      <div className="mb-6">
+      <div className="mb-6 shrink-0">
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm text-gray-500">
             Question {currentIndex + 1} of {questions.length}
@@ -236,77 +238,76 @@ export default function Mcq({ mcqData }) {
         </div>
       </div>
 
-      {/* Question */}
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">
-          {currentMcq.question}
-        </h2>
-      </div>
+      <div className="flex-1 overflow-y-auto pr-2 min-h-0 mb-4">
+        {/* Question */}
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            {currentMcq.question}
+          </h2>
+        </div>
 
-      {/* Options */}
-      <div className="space-y-3 mb-6">
-        {currentMcq.options.map((option, index) => (
-          <button
-            key={index}
-            onClick={() => handleOptionSelect(index)}
-            className={getOptionClassName(index)}
-            disabled={isSubmitted}
-          >
-            <span className="font-medium text-gray-700 mr-3">
-              {String.fromCharCode(97 + index)})
-            </span>
-            <span className="text-gray-600">{option}</span>
-          </button>
-        ))}
-      </div>
+        {/* Options */}
+        <div className="space-y-3 mb-6">
+          {currentMcq.options.map((option, index) => (
+            <button
+              key={index}
+              onClick={() => handleOptionSelect(index)}
+              className={getOptionClassName(index)}
+              disabled={isSubmitted}
+            >
+              <span className="font-medium text-gray-700 mr-3">
+                {String.fromCharCode(97 + index)})
+              </span>
+              <span className="text-gray-600 text-left block">{option}</span>
+            </button>
+          ))}
+        </div>
 
-      {/* Score Display */}
-      <div className="mb-4 p-3 bg-blue-50 rounded-lg">
-        <p className="text-blue-800 font-medium text-center">
-          Score: {score} / {questions.length} correct
-        </p>
-      </div>
-
-      {/* Answer Feedback */}
-      {isSubmitted && (
-        <div
-          className={`mb-6 p-4 rounded-lg border ${
-            currentMcq.options[selectedOption] === currentMcq.correctAnswer
-              ? "bg-green-50 border-green-200"
-              : "bg-red-50 border-red-200"
-          }`}
-        >
-          <p
-            className={`font-medium ${
-              currentMcq.options[selectedOption] === currentMcq.correctAnswer
-                ? "text-green-800"
-                : "text-red-800"
-            }`}
-          >
-            {currentMcq.options[selectedOption] === currentMcq.correctAnswer
-              ? "Correct!"
-              : "Incorrect!"}
-          </p>
-          <p className="text-gray-700 mt-2">
-            Correct Answer: {currentMcq.correctAnswer}
+        {/* Score Display */}
+        <div className="mb-4 p-3 bg-blue-50 rounded-lg">
+          <p className="text-blue-800 font-medium text-center">
+            Score: {score} / {questions.length} correct
           </p>
         </div>
-      )}
 
-      {/* Action Buttons */}
-      <div className="flex flex-wrap gap-3 mb-6">
-        <Button
-          onClick={handleSubmit}
-          disabled={selectedOption === null || isSubmitted}
-          variant="outline"
-          className={`flex-1 ${isSubmitted ? "opacity-50" : ""}`}
-        >
-          {isSubmitted ? "Submitted" : "Submit Answer"}
-        </Button>
+        {/* Answer Feedback */}
+        {isSubmitted && (
+          <div
+            className={`mb-6 p-4 rounded-lg border ${
+              currentMcq.options[selectedOption] === currentMcq.correctAnswer
+                ? "bg-green-50 border-green-200"
+                : "bg-red-50 border-red-200"
+            }`}
+          >
+            <p
+              className={`font-medium ${
+                currentMcq.options[selectedOption] === currentMcq.correctAnswer
+                  ? "text-green-800"
+                  : "text-red-800"
+              }`}
+            >
+              {currentMcq.options[selectedOption] === currentMcq.correctAnswer
+                ? "Correct!"
+                : "Incorrect!"}
+            </p>
+          </div>
+        )}
+
+        {/* Action Buttons */}
+        <div className="flex flex-wrap gap-3 mb-2">
+          <Button
+            onClick={handleSubmit}
+            disabled={selectedOption === null || isSubmitted}
+            variant="outline"
+            className={`flex-1 ${isSubmitted ? "opacity-50" : ""}`}
+          >
+            {isSubmitted ? "Submitted" : "Submit Answer"}
+          </Button>
+        </div>
       </div>
 
       {/* Navigation */}
-      <div className="flex justify-between items-center pt-4 border-t border-gray-200">
+      <div className="flex justify-between items-center pt-4 border-t border-gray-200 shrink-0">
         <Button
           onClick={handlePrevious}
           disabled={isFirst}

@@ -10,13 +10,13 @@ export default function Summary() {
   // Array of accent colors for left border only
   const accentColors = [
     "border-l-blue-500",
-    "border-l-green-500",
-    "border-l-purple-500",
-    "border-l-orange-500",
-    "border-l-pink-500",
-    "border-l-teal-500",
-    "border-l-red-500",
     "border-l-indigo-500",
+    "border-l-violet-500",
+    "border-l-purple-500",
+    "border-l-cyan-500",
+    "border-l-teal-500",
+    "border-l-emerald-500",
+    "border-l-slate-500",
   ];
 
   useEffect(() => {
