@@ -44,9 +44,9 @@ export default function McqPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 py-8 px-4">
+    <div className="min-h-screen bg-slate-50 pt-24 pb-12 px-6">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
+        <h1 className="text-3xl font-extrabold text-center text-slate-900 mb-8 tracking-tight">
           Multiple Choice Questions
         </h1>
         <Mcq mcqData={data} />

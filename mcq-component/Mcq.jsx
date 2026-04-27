@@ -140,8 +140,8 @@ export default function Mcq({ mcqData }) {
       return (
         baseClasses +
         (selectedOption === optionIndex
-          ? "border-blue-500 bg-blue-50"
-          : "border-gray-200 hover:border-gray-300 hover:bg-gray-50")
+          ? "border-indigo-500 bg-indigo-50"
+          : "border-slate-200 hover:border-slate-300 hover:bg-slate-50")
       );
     }
 
@@ -158,7 +158,7 @@ export default function Mcq({ mcqData }) {
       return baseClasses + "border-red-500 bg-red-50"; // Selected wrong answer - red
     }
 
-    return baseClasses + "border-gray-200 opacity-50"; // Other options
+    return baseClasses + "border-slate-200 opacity-50"; // Other options
   };
 
   // Show result window if quiz is completed
@@ -184,12 +184,12 @@ export default function Mcq({ mcqData }) {
     return (
       <div className="max-w-xl mx-auto p-8 bg-white rounded-2xl shadow-xl text-center">
         <div className="text-6xl mb-4">{emoji}</div>
-        <h2 className="text-3xl font-bold text-gray-800 mb-2">
+        <h2 className="text-3xl font-extrabold text-slate-900 mb-2">
           Quiz Completed!
         </h2>
-        <p className="text-gray-600 mb-8">{message}</p>
+        <p className="text-slate-500 mb-8">{message}</p>
 
-        <div className="bg-indigo-500 rounded-xl p-6 mb-8 shadow-md">
+        <div className="bg-indigo-600 rounded-[2rem] p-8 mb-8 shadow-xl">
           <p className="text-white/90 text-lg mb-2">Your Final Score</p>
           <p className="text-white text-5xl font-bold">
             {score} / {questions.length}
@@ -206,7 +206,7 @@ export default function Mcq({ mcqData }) {
             Try Again
           </Button>
           <a href="/dashboard">
-            <Button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white">
+            <Button className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md font-bold">
               Back to Dashboard
             </Button>
           </a>
@@ -216,7 +216,7 @@ export default function Mcq({ mcqData }) {
   }
 
   return (
-    <div className="max-w-xl w-full max-h-[85vh] flex flex-col mx-auto p-6 bg-white rounded-lg shadow-lg">
+    <div className="max-w-xl w-full max-h-[85vh] flex flex-col mx-auto p-8 bg-white rounded-[2rem] shadow-xl border border-slate-100">
       {/* Progress Indicator */}
       <div className="mb-6 shrink-0">
         <div className="flex justify-between items-center mb-2">
@@ -228,9 +228,9 @@ export default function Mcq({ mcqData }) {
             complete
           </span>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
+        <div className="w-full bg-slate-100 rounded-full h-2">
           <div
-            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+            className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
             style={{
               width: `${((currentIndex + 1) / questions.length) * 100}%`,
             }}
@@ -241,7 +241,7 @@ export default function Mcq({ mcqData }) {
       <div className="flex-1 overflow-y-auto pr-2 min-h-0 mb-4">
         {/* Question */}
         <div className="mb-6">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          <h2 className="text-xl font-bold text-slate-800 mb-4">
             {currentMcq.question}
           </h2>
         </div>
@@ -264,8 +264,8 @@ export default function Mcq({ mcqData }) {
         </div>
 
         {/* Score Display */}
-        <div className="mb-4 p-3 bg-blue-50 rounded-lg">
-          <p className="text-blue-800 font-medium text-center">
+        <div className="mb-4 p-4 bg-indigo-50 rounded-xl">
+          <p className="text-indigo-800 font-bold text-center">
             Score: {score} / {questions.length} correct
           </p>
         </div>

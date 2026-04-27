@@ -1,7 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import { NavBar } from "../../landing-page/components/navbar/navbar.jsx";
 import { Providers } from "./providers.jsx";
-import { Background } from "../../landing-page/components/background.jsx";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
 const geistSans = Geist({
@@ -20,11 +19,10 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${geistSans.className}  h-full antialiased`}>
-      <body className="pt-6">
+    <html lang="en" className={`${geistSans.className} h-full antialiased`}>
+      <body className="bg-slate-50 pt-20">
         <Providers>
           <Toaster />
-          <Background />
           <NavBar />
           {children}
         </Providers>

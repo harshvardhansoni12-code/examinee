@@ -16,7 +16,7 @@ export const InputBar = ({ pdf, setPdf }) => {
   };
 
   return (
-    <div className="flex w-full max-w-xl gap-3 justify-center items-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-md p-2.5 rounded-2xl shadow-sm border border-indigo-100/80 dark:border-slate-700 transition-all hover:shadow-md hover:border-indigo-300 dark:hover:border-indigo-500/50">
+    <div className="flex w-full max-w-xl gap-3 justify-center items-center bg-white p-2.5 rounded-2xl shadow-sm border border-slate-200 transition-all hover:shadow-md focus-within:border-indigo-300 focus-within:ring-4 focus-within:ring-indigo-50">
       <div className="relative flex-1 min-w-0">
         <Input
           readOnly
@@ -24,7 +24,7 @@ export const InputBar = ({ pdf, setPdf }) => {
           placeholder="Select a PDF document to begin..."
           value={pdf ? pdf.name : ""}
           onClick={DesktopClick}
-          className="w-full h-12 bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 px-4 text-slate-700 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 cursor-pointer truncate text-base font-medium"
+          className="w-full h-12 bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 px-4 text-black dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 cursor-pointer truncate text-base font-medium"
         />
         <input
           ref={fileRef}
@@ -34,8 +34,8 @@ export const InputBar = ({ pdf, setPdf }) => {
           className="hidden"
         />
       </div>
-      <Button 
-        className="h-12 px-6 rounded-xl bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 shadow-sm flex items-center justify-center shrink-0 transition-transform hover:scale-105 active:scale-95 text-white font-semibold" 
+      <Button
+        className="h-12 px-6 rounded-xl text-slate-900 bg-white hover:bg-slate-50 border border-slate-200 dark:bg-slate-800 dark:text-white dark:border-slate-700 shadow-sm flex items-center justify-center shrink-0 transition-transform hover:scale-105 active:scale-95 font-semibold"
         onClick={DesktopClick}
         type="button"
       >

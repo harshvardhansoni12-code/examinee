@@ -5,16 +5,14 @@ export default function Cards() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Array of different card background colors
+  // Array of different card top border accent colors
   const cardColors = [
-    "bg-gradient-to-br from-blue-100 to-blue-200 border-blue-300",
-    "bg-gradient-to-br from-indigo-100 to-indigo-200 border-indigo-300",
-    "bg-gradient-to-br from-violet-100 to-violet-200 border-violet-300",
-    "bg-gradient-to-br from-purple-100 to-purple-200 border-purple-300",
-    "bg-gradient-to-br from-cyan-100 to-cyan-200 border-cyan-300",
-    "bg-gradient-to-br from-teal-100 to-teal-200 border-teal-300",
-    "bg-gradient-to-br from-emerald-100 to-emerald-200 border-emerald-300",
-    "bg-gradient-to-br from-slate-100 to-slate-200 border-slate-300",
+    "border-t-indigo-500",
+    "border-t-rose-500",
+    "border-t-purple-500",
+    "border-t-amber-400",
+    "border-t-emerald-500",
+    "border-t-blue-500",
   ];
 
   useEffect(() => {
@@ -36,11 +34,11 @@ export default function Cards() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
+    <div className="min-h-screen bg-slate-50 pt-24 pb-12 px-6">
+      <h1 className="text-3xl font-extrabold text-center text-slate-900 mb-8 tracking-tight">
         Revision Cards
       </h1>
-      
+
       {loading ? (
         <div className="flex justify-center items-center h-64">
           <div className="text-xl text-gray-600">Loading cards...</div>
@@ -72,18 +70,21 @@ export default function Cards() {
 
               return (
                 <div key={`${itemIndex}-${cardIndex}`} className="">
-                  <div className={`h-96 w-72 ${colorClass} border-2 p-5 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden`}>
-                    <h2 className="text-xl font-bold text-gray-800 mb-4 pb-2 border-b border-gray-400/30">
+                  <div
+                    className={`h-[26rem] w-80 bg-white border-x border-b border-slate-100 border-t-8 ${colorClass} p-6 rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300 overflow-hidden`}
+                  >
+                    <h2 className="text-xl font-bold text-slate-800 mb-4 pb-3 border-b border-slate-100">
                       {card.title}
                     </h2>
 
-                    <ul className="space-y-2 overflow-y-auto h-64 pr-1">
+                    <ul className="space-y-3 overflow-y-auto h-72 pr-2 custom-scrollbar">
                       {card.points?.map((p, pointIndex) => (
-                        <li 
-                          key={pointIndex} 
-                          className="text-gray-700 text-sm leading-relaxed bg-white/50 p-2 rounded-lg"
+                        <li
+                          key={pointIndex}
+                          className="text-slate-600 text-sm leading-relaxed flex items-start gap-2"
                         >
-                          • {p}
+                          <span className="text-slate-300 mt-0.5">•</span>
+                          <span>{p}</span>
                         </li>
                       ))}
                     </ul>

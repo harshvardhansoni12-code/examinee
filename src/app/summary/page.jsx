@@ -9,13 +9,12 @@ export default function Summary() {
 
   // Array of accent colors for left border only
   const accentColors = [
-    "border-l-blue-500",
     "border-l-indigo-500",
-    "border-l-violet-500",
+    "border-l-rose-500",
     "border-l-purple-500",
-    "border-l-cyan-500",
-    "border-l-teal-500",
+    "border-l-amber-400",
     "border-l-emerald-500",
+    "border-l-blue-500",
     "border-l-slate-500",
   ];
 
@@ -77,15 +76,16 @@ export default function Summary() {
     );
   }
 
+  
   return (
-    <div className="min-h-screen bg-white py-12 px-4">
+    <div className="min-h-screen bg-slate-50 pt-24 pb-12 px-6">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-3">
+          <h1 className="text-3xl font-extrabold text-slate-900 mb-3 tracking-tight">
             Study Summaries
           </h1>
-          <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full"></div>
-          <p className="text-gray-500 mt-4 text-lg">
+          <div className="w-24 h-1 bg-indigo-600 mx-auto rounded-full"></div>
+          <p className="text-slate-500 mt-4 text-lg">
             Quick revision notes from your uploaded content
           </p>
         </div>
@@ -104,7 +104,7 @@ export default function Summary() {
               return (
                 <div
                   key={item.id}
-                  className={`bg-white border border-gray-200 ${accentClass} border-l-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden`}
+                  className={`bg-white border border-slate-100 ${accentClass} border-l-8 rounded-[1.5rem] shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden mb-6`}
                 >
                   {/* Header / Toggle */}
                   <button
@@ -157,9 +157,9 @@ export default function Summary() {
                           {parsedSummary.points?.map((point, i) => (
                             <li
                               key={i}
-                              className="text-gray-700 leading-relaxed flex items-start gap-2"
+                              className="text-slate-600 leading-relaxed flex items-start gap-2"
                             >
-                              <span className="text-blue-500 mt-1">•</span>
+                              <span className="text-slate-300 mt-1">•</span>
                               <span>{point}</span>
                             </li>
                           ))}
