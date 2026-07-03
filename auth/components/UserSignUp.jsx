@@ -38,7 +38,7 @@ const UserSignUp = ({ setState }) => {
           redirect: false,
         });
         if (signInResult?.ok) {
-          router.push("/dashboard");
+          router.replace("/dashboard");
           router.refresh();
         } else {
           setError(

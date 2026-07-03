@@ -24,15 +24,13 @@ const UserSignIn = ({ setState }) => {
       });
       if (result?.ok) {
         setLoading(false);
-        router.push("/dashboard");
+        router.replace("/dashboard");
         router.refresh();
       } else {
         setError(result?.error || "Invalid email or password");
       }
     } catch (error) {
       setLoading(false);
-      router.push("/authpage");
-      router.refresh();
     }
   };
 
