@@ -27,9 +27,6 @@ export const authOptions = {
         if (!userFound) {
           return null;
         }
-        console.log("after user found");
-        console.log(userFound);
-        console.log("before password compare");
         const isPasswordValid = await bcrypt.compare(
           credentials.password,
           userFound.password,
@@ -37,7 +34,6 @@ export const authOptions = {
         if (!isPasswordValid) {
           return null;
         }
-        console.log("after password compare");
         return {
           id: userFound.id,
           email: userFound.email,
