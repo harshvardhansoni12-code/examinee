@@ -1,10 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Mcq from "../../../mcq-component/Mcq";
 import ReviewTestList from "../../components/ReviewTestList";
 
-export default function McqPage() {
+function McqContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const contentId = searchParams.get("contentId");
@@ -84,5 +84,21 @@ export default function McqPage() {
         <Mcq mcqData={data} />
       </div>
     </div>
+  );
+}
+
+export default function McqPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-lg font-medium text-gray-600">
+            Loading MCQs...
+          </div>
+        </div>
+      }
+    >
+      <McqContent />
+    </Suspense>
   );
 }
