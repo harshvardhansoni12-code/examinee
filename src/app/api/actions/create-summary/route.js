@@ -1,15 +1,3 @@
-/*Create a concise 100-word explanatory summary of the following text for revision purposes.
-
-Guidelines:
-
-Keep it exactly or close to 100 words.
-Focus on key concepts, main ideas, and important details.
-Use simple, clear language for quick understanding.
-Avoid unnecessary examples or repetition.
-Ensure the summary is easy to revise quickly before exams.
-
-Text:
-[Paste your content here] */
 export const runtime = "nodejs";
 import { prisma } from "../../../../lib/prisma";
 import { getServerSession } from "next-auth";
@@ -73,7 +61,7 @@ Text:${text}
         },
       });
       if (!summaryCreated) {
-        return Response.json("mcq not create", { status: 401 });
+        return Response.json("summary not create", { status: 401 });
       }
       return Response.json({ response: response });
     }
