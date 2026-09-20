@@ -3,10 +3,25 @@ import { TypewriterEffect } from "../../components/ui/typewriter-effect";
 import { InputBar } from "../../../landing-page/components/inputbar.jsx";
 import LandingOptions from "../../../landing-page/components/landing-options";
 import { OptionsButtons } from "../../../landing-page/components/option-buttons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 export default function Dashboard() {
   const [pdf, setPdf] = useState();
   const [isProcessing, setIsProcessing] = useState(false);
+  const router = useRouter();
+  const { status } = useSession();
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.replace("/authpage");
+    }
+  }, [router, status]);
+
+  if (status === "loading" || status === "unauthenticated") {
+    return null;
+  }
+
   return (
     <div className="min-h-screen pt-20 pb-12 px-6 flex flex-col items-center bg-transparent">
       {/* Hero Section */}
