@@ -1,6 +1,7 @@
 export const runtime = "nodejs";
 import { prisma } from "../../../../lib/prisma";
 import { getServerSession } from "next-auth";
+import { authOptions } from "../../auth/[...nextauth]/route";
 import { extractAndStoreText } from "../../../../lib/pdfService";
 import { getText } from "../../../../lib/text";
 import { GoogleGenerativeAI } from "@google/generative-ai";
@@ -8,7 +9,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 export async function POST(req) {
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
   try {
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
     if (!session || !session.user) {
       return Response.json("error unauthorized", { status: 401 });
     }
@@ -74,7 +75,7 @@ ${text}
       if (!cardCreated) {
         return Response.json("mcq not create", { status: 401 });
       }
-      return Response.json({ response: response });
+      return Response.json({ response, cardsId: cardCreated.id });
     }
     //prefer gemini-2.5-flash
   } catch (e) {

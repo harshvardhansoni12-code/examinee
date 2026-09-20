@@ -1,16 +1,26 @@
 "use client";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { BookOpenCheck, WalletCards, FileText, ArrowRight } from "lucide-react";
 
-export default function LandingOptions() {
+export default function LandingOptions({ disabled = false, onNavigate }) {
   const router = useRouter();
+  const [isNavigating, setIsNavigating] = useState(false);
+  const optionsDisabled = disabled || isNavigating;
+  const navigate = (path) => {
+    if (optionsDisabled) return;
+    setIsNavigating(true);
+    onNavigate?.();
+    router.push(path);
+  };
 
   return (
     <div className="max-w-5xl mx-auto px-4 w-full">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <button
-          onClick={() => router.push("/mcq")}
-          className="group flex flex-col items-start p-8 bg-white rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-left"
+          onClick={() => navigate("/mcq")}
+          disabled={optionsDisabled}
+          className="group flex flex-col items-start p-8 bg-white rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-left disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-sm disabled:transform-none"
         >
           <div className="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
             <BookOpenCheck className="size-7 text-indigo-600" />
@@ -25,8 +35,9 @@ export default function LandingOptions() {
         </button>
 
         <button
-          onClick={() => router.push("/revision-cards")}
-          className="group flex flex-col items-start p-8 bg-white rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-left"
+          onClick={() => navigate("/revision-cards")}
+          disabled={optionsDisabled}
+          className="group flex flex-col items-start p-8 bg-white rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-left disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-sm disabled:transform-none"
         >
           <div className="w-14 h-14 bg-rose-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
             <WalletCards className="size-7 text-rose-500" />
@@ -41,8 +52,9 @@ export default function LandingOptions() {
         </button>
 
         <button
-          onClick={() => router.push("/summary")}
-          className="group flex flex-col items-start p-8 bg-white rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-left"
+          onClick={() => navigate("/summary")}
+          disabled={optionsDisabled}
+          className="group flex flex-col items-start p-8 bg-white rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-left disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-sm disabled:transform-none"
         >
           <div className="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
             <FileText className="size-7 text-amber-500" />

@@ -2,9 +2,10 @@ import { Input } from "../../src/components/ui/input";
 import { Button } from "../../src/components/ui/button";
 import { Plus } from "lucide-react";
 import { useRef } from "react";
-export const InputBar = ({ pdf, setPdf }) => {
+export const InputBar = ({ pdf, setPdf, disabled = false }) => {
   const fileRef = useRef(null);
   const DesktopClick = () => {
+    if (disabled) return;
     fileRef.current.click();
   };
 
@@ -30,6 +31,7 @@ export const InputBar = ({ pdf, setPdf }) => {
           ref={fileRef}
           onChange={handleFileChange}
           type="file"
+          disabled={disabled}
           accept=".pdf"
           className="hidden"
         />
@@ -37,6 +39,7 @@ export const InputBar = ({ pdf, setPdf }) => {
       <Button
         className="h-12 px-6 rounded-xl text-slate-900 bg-white hover:bg-slate-50 border border-slate-200 dark:bg-slate-800 dark:text-white dark:border-slate-700 shadow-sm flex items-center justify-center shrink-0 transition-transform hover:scale-105 active:scale-95 font-semibold"
         onClick={DesktopClick}
+        disabled={disabled}
         type="button"
       >
         <Plus className="size-5 mr-1" />

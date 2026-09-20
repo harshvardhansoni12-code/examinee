@@ -1,19 +1,39 @@
 "use client";
 import toast from "react-hot-toast";
 import { Button } from "../../src/components/ui/button";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export const OptionsButtons = ({ pdf }) => {
+const getReadableError = (message, fallback) => {
+  const text = typeof message === "string" ? message : "";
+
+  if (/429|too many requests|rate limit|quota|resource exhausted/i.test(text)) {
+    return "Too many requests. Please try again later.";
+  }
+
+  if (/api[_ ]?key|generative ai|gemini/i.test(text)) {
+    return "AI service is temporarily unavailable. Please try again later.";
+  }
+
+  return text || fallback;
+};
+
+const getApiError = (response, data, fallback) => {
+  if (response.status === 401) {
+    return "Your session has expired. Please sign in again.";
+  }
+
+  return getReadableError(data?.error, fallback);
+};
+
+export const OptionsButtons = ({ pdf, isProcessing, setIsProcessing }) => {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
   //mcq created
   const Mcqhandler = async () => {
     try {
-      setLoading(true);
+      setIsProcessing(true);
       if (!pdf) {
         toast.error("please select the pdf");
-        setLoading(false);
+        setIsProcessing(false);
         return;
       }
 
@@ -28,26 +48,36 @@ export const OptionsButtons = ({ pdf }) => {
       const data = await response.json();
       console.log(data);
       if (!response.ok) {
-        throw new Error(data.error || "Upload failed");
+        throw new Error(
+          getApiError(
+            response,
+            data,
+            "We couldn't process the PDF. Please try again.",
+          ),
+        );
       }
 
       toast.success("PDF processed successfully!");
-      router.push("/mcq");
-      setLoading(false);
+      router.push(`/mcq?contentId=${data.mcqId}`);
       router.refresh();
     } catch (error) {
       console.error(error);
-      toast.error("Something went wrong");
-      setLoading(false);
+      toast.error(
+        getReadableError(
+          error.message,
+          "We couldn't generate the MCQs. Please try again.",
+        ),
+      );
+      setIsProcessing(false);
     }
   };
   //card created
   const Cardhandler = async () => {
     try {
-      setLoading(true);
+      setIsProcessing(true);
       if (!pdf) {
         toast.error("please select the pdf");
-        setLoading(false);
+        setIsProcessing(false);
         return;
       }
 
@@ -62,27 +92,37 @@ export const OptionsButtons = ({ pdf }) => {
       const data = await response.json();
       console.log(data);
       if (!response.ok) {
-        throw new Error(data.error || "Upload failed");
+        throw new Error(
+          getApiError(
+            response,
+            data,
+            "We couldn't process the PDF. Please try again.",
+          ),
+        );
       }
 
       toast.success("PDF processed successfully!");
-      router.push("/revision-cards");
-      setLoading(false);
+      router.push(`/revision-cards/${data.cardsId}`);
       router.refresh();
     } catch (error) {
       console.error(error);
-      toast.error("Something went wrong");
-      setLoading(false);
+      toast.error(
+        getReadableError(
+          error.message,
+          "We couldn't create the cards. Please try again.",
+        ),
+      );
+      setIsProcessing(false);
     }
   };
 
   // summary created
   const Summaryhandler = async () => {
     try {
-      setLoading(true);
+      setIsProcessing(true);
       if (!pdf) {
         toast.error("please select the pdf");
-        setLoading(false);
+        setIsProcessing(false);
         return;
       }
 
@@ -97,17 +137,27 @@ export const OptionsButtons = ({ pdf }) => {
       const data = await response.json();
       console.log(data);
       if (!response.ok) {
-        throw new Error(data.error || "Upload failed");
+        throw new Error(
+          getApiError(
+            response,
+            data,
+            "We couldn't process the PDF. Please try again.",
+          ),
+        );
       }
 
       toast.success("PDF processed successfully!");
-      router.push("/summary");
-      setLoading(false);
+      router.push(`/summary/${data.summaryId}`);
       router.refresh();
     } catch (error) {
       console.error(error);
-      toast.error("Something went wrong ");
-      setLoading(false);
+      toast.error(
+        getReadableError(
+          error.message,
+          "We couldn't create the summary. Please try again.",
+        ),
+      );
+      setIsProcessing(false);
     }
   };
 
@@ -116,21 +166,21 @@ export const OptionsButtons = ({ pdf }) => {
     <div className="flex flex-wrap justify-center items-center gap-4 w-full mt-4">
       <Button
         className="rounded-xl px-8 py-6 text-base font-semibold shadow-sm hover:shadow-md transition-all bg-white text-slate-600 hover:bg-white border border-gray-200"
-        disabled={loading}
+        disabled={isProcessing}
         onClick={Mcqhandler}
       >
         Generate MCQs
       </Button>
       <Button
         className="rounded-xl px-8 py-6 text-base font-semibold shadow-sm hover:shadow-md transition-all bg-white text-slate-600 hover:bg-white border border-gray-200"
-        disabled={loading}
+        disabled={isProcessing}
         onClick={Cardhandler}
       >
         Create Cards
       </Button>
       <Button
         className="rounded-xl px-8 py-6 text-base font-semibold shadow-sm hover:shadow-md transition-all bg-white text-slate-600 hover:bg-white border border-gray-200"
-        disabled={loading}
+        disabled={isProcessing}
         onClick={Summaryhandler}
       >
         Make Summary

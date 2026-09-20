@@ -1,7 +1,8 @@
 import { getServerSession } from "next-auth";
+import { authOptions } from "../../auth/[...nextauth]/route";
 import { prisma } from "../../../../lib/prisma";
 export async function GET(req) {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
   const url = new URL(req.url);
   const contentId = url.searchParams.get("contentId");
 

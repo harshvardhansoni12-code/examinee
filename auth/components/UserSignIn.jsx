@@ -5,16 +5,15 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 
-const UserSignIn = ({ setState }) => {
+const UserSignIn = ({ setState, isAuthenticating, setIsAuthenticating }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
 
   const handleSignIn = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setIsAuthenticating(true);
     setError("");
     try {
       const result = await signIn("credentials", {
@@ -23,15 +22,27 @@ const UserSignIn = ({ setState }) => {
         redirect: false,
       });
       if (result?.ok) {
-        setLoading(false);
         router.replace("/dashboard");
         router.refresh();
       } else {
-        setError(result?.error || "Invalid email or password");
+        setError(
+          result?.error === "CredentialsSignin"
+            ? "The email or password is incorrect. Please check your details and try again."
+            : "We couldn't sign you in. Please try again in a moment.",
+        );
       }
     } catch (error) {
-      setLoading(false);
+      setError(
+        "We couldn't connect to the sign-in service. Check your internet connection and try again.",
+      );
+    } finally {
+      setIsAuthenticating(false);
     }
+  };
+
+  const handleProviderSignIn = (provider) => {
+    setIsAuthenticating(true);
+    signIn(provider, { callbackUrl: "/dashboard" });
   };
 
   return (
@@ -67,6 +78,7 @@ const UserSignIn = ({ setState }) => {
               placeholder="Email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              disabled={isAuthenticating}
               required
             />
           </div>
@@ -77,14 +89,15 @@ const UserSignIn = ({ setState }) => {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              disabled={isAuthenticating}
               required
             />
           </div>
           <Button
             className="w-full h-12 bg-white text-slate-900 hover:bg-white rounded-xl font-bold shadow-md hover:shadow-lg transition-all"
-            disabled={loading}
+            disabled={isAuthenticating}
           >
-            {loading ? "Signing in..." : "Sign In"}
+            {isAuthenticating ? "Signing in..." : "Sign In"}
           </Button>
         </form>
 
@@ -100,22 +113,26 @@ const UserSignIn = ({ setState }) => {
           <Button
             variant="outline"
             className="h-11 rounded-xl border-slate-200 text-slate-600 hover:bg-slate-50 font-semibold shadow-sm"
+            onClick={() => handleProviderSignIn("google")}
+            disabled={isAuthenticating}
           >
             Google
           </Button>
           <Button
             variant="outline"
             className="h-11 rounded-xl border-slate-200 text-slate-600 hover:bg-slate-50 font-semibold shadow-sm"
-            onClick={() => signIn("github", { callbackUrl: "/dashboard" })}
+            onClick={() => handleProviderSignIn("github")}
+            disabled={isAuthenticating}
           >
             GitHub
           </Button>
         </div>
 
         <div className="mt-8 text-center text-sm text-slate-500 font-medium">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <button
             onClick={() => setState((prev) => !prev)}
+            disabled={isAuthenticating}
             className="text-indigo-600 font-bold hover:text-indigo-700 hover:underline transition-colors"
           >
             Sign up

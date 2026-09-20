@@ -1,6 +1,7 @@
 export const runtime = "nodejs";
 import { prisma } from "../../../../lib/prisma";
 import { getServerSession } from "next-auth";
+import { authOptions } from "../../auth/[...nextauth]/route";
 import { extractAndStoreText } from "../../../../lib/pdfService";
 import { getText } from "../../../../lib/text";
 import { GoogleGenerativeAI } from "@google/generative-ai";
@@ -8,7 +9,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 export async function POST(req) {
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
   try {
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
     if (!session || !session.user) {
       return Response.json("error unauthorized", { status: 401 });
     }
@@ -75,21 +76,30 @@ Remember: Return ONLY the JSON object, nothing else.
       const result = await model.generateContent(prompt);
       let response = result.response.text();
       console.log("Raw RESULT:", response);
-      
+
       // Clean the response - remove markdown code blocks and extra whitespace
-      response = response.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-      
+      response = response
+        .replace(/```json\n?/g, "")
+        .replace(/```\n?/g, "")
+        .trim();
+
       // Try to parse the JSON to validate it
       let parsedMcq;
       try {
         parsedMcq = JSON.parse(response);
-        console.log("Parsed MCQ count:", parsedMcq.questions ? parsedMcq.questions.length : 0);
+        console.log(
+          "Parsed MCQ count:",
+          parsedMcq.questions ? parsedMcq.questions.length : 0,
+        );
       } catch (parseError) {
         console.error("JSON parse error:", parseError);
         console.error("Response that failed to parse:", response);
-        return Response.json({ error: "Failed to parse AI response" }, { status: 500 });
+        return Response.json(
+          { error: "Failed to parse AI response" },
+          { status: 500 },
+        );
       }
-      
+
       const mcqCreated = await prisma.mcq.create({
         data: {
           mcq: response,
@@ -108,10 +118,10 @@ Remember: Return ONLY the JSON object, nothing else.
       if (!mcqCreated) {
         return Response.json("mcq not create", { status: 401 });
       }
-      return Response.json({ 
+      return Response.json({
         success: true,
         data: parsedMcq,
-        mcqId: mcqCreated.id
+        mcqId: mcqCreated.id,
       });
     }
     //prefer gemini-2.5-flash

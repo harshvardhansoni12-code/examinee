@@ -10,7 +10,7 @@ function McqContent() {
   const contentId = searchParams.get("contentId");
   const [data, setData] = useState([]);
   const [tests, setTests] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -76,12 +76,14 @@ function McqContent() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-24 pb-12 px-6">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-extrabold text-center text-slate-900 mb-8 tracking-tight">
+    <div className="h-[calc(100vh-5rem)] overflow-hidden bg-slate-50 px-4 py-4 sm:px-6">
+      <div className="mx-auto flex h-full max-w-5xl flex-col">
+        <h1 className="mb-3 shrink-0 text-center text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
           Multiple Choice Questions
         </h1>
-        <Mcq mcqData={data} />
+        <div className="min-h-0 flex-1">
+          <Mcq mcqData={data} />
+        </div>
       </div>
     </div>
   );

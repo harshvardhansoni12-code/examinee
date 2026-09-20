@@ -5,18 +5,17 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-const UserSignUp = ({ setState }) => {
+const UserSignUp = ({ setState, isAuthenticating, setIsAuthenticating }) => {
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const router = useRouter();
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setIsAuthenticating(true);
     setError("");
     setSuccess("");
 
@@ -42,18 +41,31 @@ const UserSignUp = ({ setState }) => {
           router.refresh();
         } else {
           setError(
-            "Account created but login failed. Please try signing in manually.",
+            "Your account was created, but we couldn't sign you in automatically. Please use the sign-in form.",
           );
         }
       } else {
         const errorData = await response.json().catch(() => ({}));
-        setError(errorData.message || "Signup failed. Please try again.");
+        setError(
+          response.status === 400 && errorData.message === "User already exists"
+            ? "An account with this email already exists. Try signing in instead."
+            : response.status >= 500
+              ? "We couldn't create your account because the service is temporarily unavailable. Please try again shortly."
+              : "We couldn't create your account. Please check your details and try again.",
+        );
       }
-      setLoading(false);
     } catch (err) {
-      setError("Signup failed. Please try again.");
-      setLoading(false);
+      setError(
+        "We couldn't connect to the sign-up service. Check your internet connection and try again.",
+      );
+    } finally {
+      setIsAuthenticating(false);
     }
+  };
+
+  const handleProviderSignIn = (provider) => {
+    setIsAuthenticating(true);
+    signIn(provider, { callbackUrl: "/dashboard" });
   };
 
   return (
@@ -94,6 +106,7 @@ const UserSignUp = ({ setState }) => {
               placeholder="Full Name"
               value={fullname}
               onChange={(e) => setFullname(e.target.value)}
+              disabled={isAuthenticating}
               required
             />
           </div>
@@ -104,6 +117,7 @@ const UserSignUp = ({ setState }) => {
               placeholder="Email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              disabled={isAuthenticating}
               required
             />
           </div>
@@ -114,14 +128,15 @@ const UserSignUp = ({ setState }) => {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              disabled={isAuthenticating}
               required
             />
           </div>
           <Button
             className="w-full h-12 bg-white text-slate-900 hover:bg-white rounded-xl font-bold shadow-md hover:shadow-lg transition-all"
-            disabled={loading}
+            disabled={isAuthenticating}
           >
-            {loading ? "Signing Up..." : "Sign Up"}
+            {isAuthenticating ? "Signing Up..." : "Sign Up"}
           </Button>
         </form>
 
@@ -137,13 +152,16 @@ const UserSignUp = ({ setState }) => {
           <Button
             variant="outline"
             className="h-11 rounded-xl border-slate-200 text-slate-600 hover:bg-slate-50 font-semibold shadow-sm"
+            onClick={() => handleProviderSignIn("google")}
+            disabled={isAuthenticating}
           >
             Google
           </Button>
           <Button
             variant="outline"
             className="h-11 rounded-xl border-slate-200 text-slate-600 hover:bg-slate-50 font-semibold shadow-sm"
-            onClick={() => signIn("github", { callbackUrl: "/dashboard" })}
+            onClick={() => handleProviderSignIn("github")}
+            disabled={isAuthenticating}
           >
             GitHub
           </Button>
@@ -153,6 +171,7 @@ const UserSignUp = ({ setState }) => {
           Already have an account?{" "}
           <button
             onClick={() => setState((prev) => !prev)}
+            disabled={isAuthenticating}
             className="text-indigo-600 font-bold hover:text-indigo-700 hover:underline transition-colors"
           >
             Sign in
