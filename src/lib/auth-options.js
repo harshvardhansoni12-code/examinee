@@ -34,25 +34,29 @@ export const authOptions = {
       },
     }),
   ],
+  session: {
+    strategy: "jwt",
+  },
   callbacks: {
     async signIn({ user, account }) {
-      if (account.provider === "github") {
-        if (!user.email) return false;
+      if (account?.provider !== "github") return true;
 
-        const existingUser = await prisma.user.findUnique({
-          where: { email: user.email },
-        });
+      const email = user.email?.trim().toLowerCase();
+      if (!email) return false;
 
-        if (!existingUser) {
-          await prisma.user.create({
-            data: {
-              email: user.email,
-              fullname: user.name,
-              password: "",
-            },
-          });
-        }
-      }
+      const databaseUser = await prisma.user.upsert({
+        where: { email },
+        update: {},
+        create: {
+          email,
+          fullname: user.name,
+          password: "",
+        },
+      });
+
+      user.id = databaseUser.id;
+      user.email = databaseUser.email;
+      user.name = databaseUser.fullname ?? user.name;
       return true;
     },
     async jwt({ token, user }) {
