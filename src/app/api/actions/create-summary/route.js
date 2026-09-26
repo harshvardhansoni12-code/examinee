@@ -1,7 +1,7 @@
 export const runtime = "nodejs";
 import { prisma } from "../../../../lib/prisma";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../auth/[...nextauth]/route";
+import { authOptions } from "../../../../lib/auth-options";
 import { extractAndStoreText } from "../../../../lib/pdfService";
 import { getText } from "../../../../lib/text";
 import { GoogleGenerativeAI } from "@google/generative-ai";
