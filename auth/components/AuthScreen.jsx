@@ -4,6 +4,7 @@ import UserSignIn from "./UserSignIn.jsx";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+
 export const AuthScreen = () => {
   const [state, setState] = useState(true);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
@@ -21,8 +22,8 @@ export const AuthScreen = () => {
   }
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      {state == true ? (
+    <div className="min-h-[calc(100vh-5rem)] flex justify-center items-center px-4 py-12 bg-paper-grid">
+      {state === true ? (
         <UserSignIn
           state={state}
           setState={setState}

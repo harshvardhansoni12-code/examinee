@@ -16,7 +16,7 @@ export default function Cards() {
       try {
         const response = await fetch("/api/actions/get-cards");
         if (!response.ok) {
-          throw new Error("No cards found");
+          throw new Error("No revision cards found");
         }
         const result = await response.json();
         setData(Array.isArray(result) ? result : [result]);
@@ -31,16 +31,16 @@ export default function Cards() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-24 pb-12 px-6">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-[calc(100vh-5rem)] bg-paper-grid pt-10 pb-16 px-4 sm:px-8">
+      <div className="max-w-4xl mx-auto">
         <ReviewTestList
           type="cards"
           items={data}
           loading={loading}
           error={error}
           title="Saved Revision Cards"
-          description="Review your saved revision card sets and open a topic to continue studying."
-          actionLabel="View Cards"
+          description="Review your active recall flashcard sets and open a topic to continue revising."
+          actionLabel="Study Cards"
           onReview={(item) => router.push(`/revision-cards/${item.id}`)}
           onClose={() => router.push("/dashboard")}
         />

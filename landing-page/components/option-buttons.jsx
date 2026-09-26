@@ -2,6 +2,7 @@
 import toast from "react-hot-toast";
 import { Button } from "../../src/components/ui/button";
 import { useRouter } from "next/navigation";
+import { BookOpenCheck, WalletCards, FileText, Loader2, Sparkles } from "lucide-react";
 
 const getReadableError = (message, fallback) => {
   const text = typeof message === "string" ? message : "";
@@ -27,17 +28,17 @@ const getApiError = (response, data, fallback) => {
 
 export const OptionsButtons = ({ pdf, isProcessing, setIsProcessing }) => {
   const router = useRouter();
-  //mcq created
+
+  // mcq created
   const Mcqhandler = async () => {
     try {
       setIsProcessing(true);
       if (!pdf) {
-        toast.error("please select the pdf");
+        toast.error("Please select a PDF file first");
         setIsProcessing(false);
         return;
       }
 
-      // Create FormData and send the actual file
       const formData = new FormData();
       formData.append("file", pdf);
 
@@ -46,7 +47,6 @@ export const OptionsButtons = ({ pdf, isProcessing, setIsProcessing }) => {
         body: formData,
       });
       const data = await response.json();
-      console.log(data);
       if (!response.ok) {
         throw new Error(
           getApiError(
@@ -57,7 +57,7 @@ export const OptionsButtons = ({ pdf, isProcessing, setIsProcessing }) => {
         );
       }
 
-      toast.success("PDF processed successfully!");
+      toast.success("MCQs generated successfully!");
       router.push(`/mcq?contentId=${data.mcqId}`);
       router.refresh();
     } catch (error) {
@@ -71,17 +71,17 @@ export const OptionsButtons = ({ pdf, isProcessing, setIsProcessing }) => {
       setIsProcessing(false);
     }
   };
-  //card created
+
+  // card created
   const Cardhandler = async () => {
     try {
       setIsProcessing(true);
       if (!pdf) {
-        toast.error("please select the pdf");
+        toast.error("Please select a PDF file first");
         setIsProcessing(false);
         return;
       }
 
-      // Create FormData and send the actual file
       const formData = new FormData();
       formData.append("file", pdf);
 
@@ -90,7 +90,6 @@ export const OptionsButtons = ({ pdf, isProcessing, setIsProcessing }) => {
         body: formData,
       });
       const data = await response.json();
-      console.log(data);
       if (!response.ok) {
         throw new Error(
           getApiError(
@@ -101,7 +100,7 @@ export const OptionsButtons = ({ pdf, isProcessing, setIsProcessing }) => {
         );
       }
 
-      toast.success("PDF processed successfully!");
+      toast.success("Flashcards created successfully!");
       router.push(`/revision-cards/${data.cardsId}`);
       router.refresh();
     } catch (error) {
@@ -121,12 +120,11 @@ export const OptionsButtons = ({ pdf, isProcessing, setIsProcessing }) => {
     try {
       setIsProcessing(true);
       if (!pdf) {
-        toast.error("please select the pdf");
+        toast.error("Please select a PDF file first");
         setIsProcessing(false);
         return;
       }
 
-      // Create FormData and send the actual file
       const formData = new FormData();
       formData.append("file", pdf);
 
@@ -135,7 +133,6 @@ export const OptionsButtons = ({ pdf, isProcessing, setIsProcessing }) => {
         body: formData,
       });
       const data = await response.json();
-      console.log(data);
       if (!response.ok) {
         throw new Error(
           getApiError(
@@ -146,7 +143,7 @@ export const OptionsButtons = ({ pdf, isProcessing, setIsProcessing }) => {
         );
       }
 
-      toast.success("PDF processed successfully!");
+      toast.success("Summary generated successfully!");
       router.push(`/summary/${data.summaryId}`);
       router.refresh();
     } catch (error) {
@@ -161,29 +158,45 @@ export const OptionsButtons = ({ pdf, isProcessing, setIsProcessing }) => {
     }
   };
 
-  //
   return (
-    <div className="flex flex-wrap justify-center items-center gap-4 w-full mt-4">
+    <div className="flex flex-wrap justify-center items-center gap-3.5 w-full mt-2">
       <Button
-        className="rounded-xl px-8 py-6 text-base font-semibold shadow-sm hover:shadow-md transition-all bg-white text-slate-600 hover:bg-white border border-gray-200"
+        className="btn-brutal h-12 px-6 rounded-2xl text-xs sm:text-sm font-extrabold bg-[#E85B9C] hover:bg-[#C93678] text-white shadow-brutal flex items-center gap-2 cursor-pointer"
         disabled={isProcessing}
         onClick={Mcqhandler}
       >
-        Generate MCQs
+        {isProcessing ? (
+          <Loader2 className="w-4 h-4 animate-spin" />
+        ) : (
+          <BookOpenCheck className="w-4 h-4" />
+        )}
+        <span>Generate MCQs</span>
       </Button>
+
       <Button
-        className="rounded-xl px-8 py-6 text-base font-semibold shadow-sm hover:shadow-md transition-all bg-white text-slate-600 hover:bg-white border border-gray-200"
+        className="btn-brutal h-12 px-6 rounded-2xl text-xs sm:text-sm font-extrabold bg-[#FFF3D6] hover:bg-[#FDE68A] text-[#8A5800] shadow-brutal flex items-center gap-2 cursor-pointer"
         disabled={isProcessing}
         onClick={Cardhandler}
       >
-        Create Cards
+        {isProcessing ? (
+          <Loader2 className="w-4 h-4 animate-spin" />
+        ) : (
+          <WalletCards className="w-4 h-4" />
+        )}
+        <span>Create Flashcards</span>
       </Button>
+
       <Button
-        className="rounded-xl px-8 py-6 text-base font-semibold shadow-sm hover:shadow-md transition-all bg-white text-slate-600 hover:bg-white border border-gray-200"
+        className="btn-brutal h-12 px-6 rounded-2xl text-xs sm:text-sm font-extrabold bg-[#D1FAE5] hover:bg-[#A7F3D0] text-[#065F46] shadow-brutal flex items-center gap-2 cursor-pointer"
         disabled={isProcessing}
         onClick={Summaryhandler}
       >
-        Make Summary
+        {isProcessing ? (
+          <Loader2 className="w-4 h-4 animate-spin" />
+        ) : (
+          <FileText className="w-4 h-4" />
+        )}
+        <span>Make Summary</span>
       </Button>
     </div>
   );

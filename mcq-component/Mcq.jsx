@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { Button } from "../src/components/ui/button";
+import { Sparkles, CheckCircle2, XCircle, ArrowRight, ArrowLeft, RotateCcw, Award, Trophy, Check } from "lucide-react";
+import Link from "next/link";
 
 export default function Mcq({ mcqData }) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -20,13 +22,11 @@ export default function Mcq({ mcqData }) {
     const cleanAndParseJson = (jsonString) => {
       if (typeof jsonString !== "string") return null;
 
-      // Remove markdown code blocks (```json or ```)
       let cleaned = jsonString
         .replace(/```json\n?/g, "")
         .replace(/```\n?/g, "")
         .trim();
 
-      // Remove any trailing backticks or whitespace
       cleaned = cleaned.replace(/`+$/, "").trim();
 
       try {
@@ -37,7 +37,6 @@ export default function Mcq({ mcqData }) {
       }
     };
 
-    // If data is an array of mcq objects from database
     if (Array.isArray(data)) {
       data.forEach((item) => {
         if (typeof item.mcq === "string") {
@@ -49,17 +48,11 @@ export default function Mcq({ mcqData }) {
           questions = [...questions, ...item.mcq.questions];
         }
       });
-    }
-    // If data is already parsed object from API
-    else if (data && data.questions && Array.isArray(data.questions)) {
+    } else if (data && data.questions && Array.isArray(data.questions)) {
       questions = data.questions;
-    }
-    // If data has a data property (from API response)
-    else if (data && data.data && data.data.questions) {
+    } else if (data && data.data && data.data.questions) {
       questions = data.data.questions;
-    }
-    // If data is a saved MCQ record returned by the API
-    else if (data && data.mcq) {
+    } else if (data && data.mcq) {
       if (typeof data.mcq === "string") {
         const parsed = cleanAndParseJson(data.mcq);
         questions = parsed?.questions || [];
@@ -75,9 +68,13 @@ export default function Mcq({ mcqData }) {
 
   if (questions.length === 0) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <p className="text-gray-500 text-lg">
-          No valid MCQs found. Please check your data.
+      <div className="flex flex-col items-center justify-center p-12 bg-[#FFFDF9] border-3 border-[#191919] rounded-[2.5rem] shadow-brutal text-center">
+        <div className="w-12 h-12 rounded-2xl bg-[#FEE2E2] border-2 border-[#191919] text-[#EF4444] font-black flex items-center justify-center mb-4">
+          !
+        </div>
+        <h3 className="text-xl font-black text-[#191919] mb-2">No Valid Questions Found</h3>
+        <p className="text-xs font-semibold text-[#6B6B6B]">
+          Please check your study document and try generating the test again.
         </p>
       </div>
     );
@@ -87,7 +84,6 @@ export default function Mcq({ mcqData }) {
   const isFirst = currentIndex === 0;
   const isLast = currentIndex === questions.length - 1;
 
-  // Handler functions defined first
   const handlePrevious = () => {
     if (!isFirst) {
       setCurrentIndex(currentIndex - 1);
@@ -125,7 +121,6 @@ export default function Mcq({ mcqData }) {
       setAnsweredQuestions({ ...answeredQuestions, [currentIndex]: true });
     }
 
-    // If it's the last question, show result after a short delay
     if (isLast) {
       setTimeout(() => {
         setScore(nextScore);
@@ -143,106 +138,124 @@ export default function Mcq({ mcqData }) {
     setAnsweredQuestions({});
   };
 
-  const getOptionClassName = (optionIndex) => {
-    const baseClasses =
-      "w-full text-left p-3 rounded-lg border-2 transition-all duration-200 text-sm sm:text-base ";
+  const getOptionClasses = (optionIndex) => {
+    const base =
+      "relative w-full flex items-center gap-3.5 p-4 rounded-2xl border-2 text-left font-bold text-sm sm:text-base transition-all duration-150 cursor-pointer select-none ";
 
     if (!isSubmitted) {
-      // Before submit - show selected state
+      if (selectedOption === optionIndex) {
+        return (
+          base +
+          "bg-[#FCE7F1] border-[#191919] text-[#191919] shadow-brutal -translate-y-0.5"
+        );
+      }
       return (
-        baseClasses +
-        (selectedOption === optionIndex
-          ? "border-indigo-500 bg-indigo-50"
-          : "border-slate-200 hover:border-slate-300 hover:bg-slate-50")
+        base +
+        "bg-[#FFFDF9] border-[#191919] text-[#191919] shadow-brutal-sm hover:shadow-brutal hover:-translate-y-0.5 hover:bg-[#F5F2EB]"
       );
     }
 
-    // After submit - show correct/incorrect
     const isSelected = selectedOption === optionIndex;
-    const isCorrect =
-      currentMcq.options[optionIndex] === currentMcq.correctAnswer;
+    const isCorrect = currentMcq.options[optionIndex] === currentMcq.correctAnswer;
 
     if (isCorrect) {
-      return baseClasses + "border-green-500 bg-green-50"; // Correct answer - green
+      return base + "bg-[#D1FAE5] border-[#191919] text-[#065F46] shadow-brutal";
     }
 
     if (isSelected && !isCorrect) {
-      return baseClasses + "border-red-500 bg-red-50"; // Selected wrong answer - red
+      return base + "bg-[#FEE2E2] border-[#191919] text-[#991B1B] shadow-brutal";
     }
 
-    return baseClasses + "border-slate-200 opacity-50"; // Other options
+    return base + "bg-[#F5F2EB] border-[#E8E4DC] text-[#888888] opacity-60 cursor-not-allowed";
   };
 
-  // Show result window if quiz is completed
+  // Result view
   if (showResult) {
     const percentage = Math.round((score / questions.length) * 100);
     let message = "";
     let emoji = "";
 
     if (percentage >= 80) {
-      message = "Excellent work!";
-      emoji = "🎉";
+      message = "Outstanding mastery! You crushed this exam!";
+      emoji = "🏆";
     } else if (percentage >= 60) {
-      message = "Good job!";
-      emoji = "👍";
+      message = "Solid score! A little more revision will make it perfect.";
+      emoji = "🎯";
     } else if (percentage >= 40) {
-      message = "Keep practicing!";
+      message = "Good start! Revisit your flashcards to solidify key facts.";
       emoji = "📚";
     } else {
-      message = "Don't give up!";
+      message = "Don't worry! Review the summary notes and give it another shot.";
       emoji = "💪";
     }
 
     return (
-      <div className="max-w-lg mx-auto p-5 sm:p-6 bg-white rounded-2xl shadow-xl text-center">
-        <div className="text-5xl mb-3">{emoji}</div>
-        <h2 className="text-2xl font-extrabold text-slate-900 mb-2">
-          Quiz Completed!
+      <div className="max-w-lg mx-auto p-6 sm:p-10 bg-[#FFFDF9] rounded-[2.5rem] border-3 border-[#191919] shadow-brutal-lg text-center animate-in zoom-in-95 duration-200">
+        <div className="text-5xl mb-4 animate-playful-float">{emoji}</div>
+        <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#FFF3D6] border border-[#191919] text-[#8A5800] text-xs font-black uppercase tracking-wider mb-2">
+          <Sparkles className="w-3.5 h-3.5" />
+          <span>Quiz Summary</span>
+        </div>
+        <h2 className="text-3xl font-black text-[#191919] tracking-tight mb-2">
+          Exam Completed!
         </h2>
-        <p className="text-sm text-slate-500 mb-5">{message}</p>
+        <p className="text-xs sm:text-sm font-semibold text-[#6B6B6B] mb-8 leading-relaxed">
+          {message}
+        </p>
 
-        <div className="bg-indigo-600 rounded-2xl p-6 mb-6 shadow-xl">
-          <p className="text-white/90 text-base mb-2">Your Final Score</p>
-          <p className="text-white text-4xl font-bold">
-            {score} / {questions.length}
+        {/* Score Card */}
+        <div className="bg-[#E85B9C] border-3 border-[#191919] rounded-[2rem] p-6 mb-8 shadow-brutal text-white">
+          <p className="text-white/90 text-xs font-extrabold uppercase tracking-widest mb-1">
+            Your Final Score
           </p>
-          <p className="text-white/80 text-base mt-2">{percentage}%</p>
+          <div className="text-5xl font-black tracking-tight my-2">
+            {score} <span className="text-2xl font-bold text-white/80">/ {questions.length}</span>
+          </div>
+          <div className="inline-block px-4 py-1 rounded-full bg-white/20 border border-white/40 text-sm font-black mt-2">
+            {percentage}% Accuracy
+          </div>
         </div>
 
-        <div className="flex gap-4 justify-center">
+        {/* Action buttons */}
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Button
             onClick={handleRestart}
             variant="outline"
-            className="px-6 py-3"
+            className="btn-brutal h-12 px-6 rounded-2xl text-xs sm:text-sm font-extrabold bg-[#FFFDF9] text-[#191919] flex items-center justify-center gap-2 cursor-pointer"
           >
-            Try Again
+            <RotateCcw className="w-4 h-4" />
+            <span>Try Again</span>
           </Button>
-          <a href="/dashboard">
-            <Button className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md font-bold">
-              Back to Dashboard
+          <Link href="/dashboard" className="w-full sm:w-auto">
+            <Button className="btn-brutal h-12 px-7 rounded-2xl text-xs sm:text-sm font-extrabold bg-[#E85B9C] hover:bg-[#C93678] text-white shadow-brutal w-full cursor-pointer flex items-center justify-center gap-2">
+              <span>Back to Dashboard</span>
+              <ArrowRight className="w-4 h-4" />
             </Button>
-          </a>
+          </Link>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl w-full h-full min-h-0 flex flex-col mx-auto p-4 sm:p-5 bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
-      {/* Progress Indicator */}
-      <div className="mb-4 shrink-0">
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-xs sm:text-sm text-gray-500">
-            Question {currentIndex + 1} of {questions.length}
-          </span>
-          <span className="text-xs sm:text-sm text-gray-500">
-            {Math.round(((currentIndex + 1) / questions.length) * 100)}%
-            complete
+    <div className="w-full bg-[#FFFDF9] rounded-[2.5rem] border-3 border-[#191919] shadow-brutal-lg p-5 sm:p-8 flex flex-col">
+      {/* Progress Header */}
+      <div className="mb-6 pb-4 border-b-2 border-[#191919]">
+        <div className="flex justify-between items-center mb-2.5">
+          <div className="flex items-center gap-2">
+            <span className="px-3 py-1 rounded-full bg-[#F5F2EB] border border-[#191919] text-xs font-black text-[#191919]">
+              Question {currentIndex + 1} of {questions.length}
+            </span>
+          </div>
+          <span className="text-xs font-black text-[#E85B9C]">
+            {Math.round(((currentIndex + 1) / questions.length) * 100)}% Completed
           </span>
         </div>
-        <div className="w-full bg-slate-100 rounded-full h-2">
+
+        {/* Playful Progress Bar */}
+        <div className="w-full bg-[#F5F2EB] border-2 border-[#191919] rounded-full h-3.5 p-0.5 overflow-hidden">
           <div
-            className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
+            className="bg-[#E85B9C] h-full rounded-full transition-all duration-300"
             style={{
               width: `${((currentIndex + 1) / questions.length) * 100}%`,
             }}
@@ -250,97 +263,129 @@ export default function Mcq({ mcqData }) {
         </div>
       </div>
 
-      <div className="grid flex-1 min-h-0 grid-cols-1 gap-4 mb-4 md:grid-cols-[0.9fr_1.1fr] md:gap-5">
-        <section className="min-h-0 overflow-y-auto rounded-xl bg-slate-50 p-4 md:border-r md:border-slate-200 md:rounded-r-none md:bg-transparent md:pr-5">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-indigo-600">
-            Question {currentIndex + 1}
-          </p>
-          <h2 className="text-lg font-bold leading-relaxed text-slate-800 sm:text-xl">
-            {currentMcq.question}
-          </h2>
-          <div className="mt-6 rounded-xl bg-indigo-50 p-3">
-            <p className="text-center text-sm font-bold text-indigo-800 sm:text-base">
-              Score: {score} / {questions.length} correct
+      {/* Question Content & Answers Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_1.1fr] gap-6 mb-6">
+        {/* Left: Question Box */}
+        <div className="flex flex-col justify-between bg-[#F5F2EB] rounded-[2rem] border-2 border-[#191919] p-5 sm:p-6 shadow-brutal-sm">
+          <div>
+            <span className="inline-block px-3 py-1 rounded-full bg-[#E85B9C] text-white text-[11px] font-black uppercase tracking-wider mb-3">
+              Prompt
+            </span>
+            <h2 className="text-lg sm:text-xl md:text-2xl font-black text-[#191919] leading-snug">
+              {currentMcq.question}
+            </h2>
+          </div>
+
+          <div className="mt-6 pt-4 border-t border-[#E8E4DC] flex items-center justify-between">
+            <span className="text-xs font-extrabold text-[#6B6B6B]">Live Score</span>
+            <span className="px-3 py-1 rounded-full bg-white border border-[#191919] text-xs font-black text-[#191919]">
+              {score} / {questions.length} Correct
+            </span>
+          </div>
+        </div>
+
+        {/* Right: Answer Choices */}
+        <div className="flex flex-col justify-between">
+          <div>
+            <p className="text-xs font-black uppercase tracking-wider text-[#6B6B6B] mb-3">
+              Select the correct option
             </p>
-          </div>
-        </section>
+            <div className="space-y-3">
+              {currentMcq.options.map((option, index) => {
+                const isSelected = selectedOption === index;
+                const isCorrect = isSubmitted && option === currentMcq.correctAnswer;
+                const isWrong = isSubmitted && isSelected && !isCorrect;
 
-        <section className="flex min-h-0 flex-col pr-1">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
-            Choose an answer
-          </p>
-          <div className="min-h-0 flex-1 space-y-2 overflow-y-auto">
-            {currentMcq.options.map((option, index) => (
-              <button
-                key={index}
-                onClick={() => handleOptionSelect(index)}
-                className={getOptionClassName(index)}
-                disabled={isSubmitted}
-              >
-                <span className="font-medium text-gray-700 mr-3">
-                  {String.fromCharCode(97 + index)})
-                </span>
-                <span className="text-gray-600 text-left block">{option}</span>
-              </button>
-            ))}
-          </div>
+                return (
+                  <button
+                    key={index}
+                    onClick={() => handleOptionSelect(index)}
+                    className={getOptionClasses(index)}
+                    disabled={isSubmitted}
+                  >
+                    <span
+                      className={`w-7 h-7 rounded-xl border-2 border-[#191919] flex items-center justify-center text-xs font-black shrink-0 ${
+                        isSelected && !isSubmitted
+                          ? "bg-[#E85B9C] text-white"
+                          : isCorrect
+                          ? "bg-[#10B981] text-white"
+                          : isWrong
+                          ? "bg-[#EF4444] text-white"
+                          : "bg-white text-[#191919]"
+                      }`}
+                    >
+                      {String.fromCharCode(65 + index)}
+                    </span>
+                    <span className="flex-1 min-w-0 text-left leading-relaxed">
+                      {option}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
 
-          {isSubmitted && (
-            <div
-              className={`mt-3 p-3 rounded-lg border text-sm ${
-                currentMcq.options[selectedOption] === currentMcq.correctAnswer
-                  ? "bg-green-50 border-green-200"
-                  : "bg-red-50 border-red-200"
-              }`}
-            >
-              <p
-                className={`font-medium ${
-                  currentMcq.options[selectedOption] ===
-                  currentMcq.correctAnswer
-                    ? "text-green-800"
-                    : "text-red-800"
+            {/* Submitted Feedback Box */}
+            {isSubmitted && (
+              <div
+                className={`mt-4 p-4 rounded-2xl border-2 border-[#191919] text-xs sm:text-sm font-extrabold flex items-center gap-2.5 animate-in fade-in ${
+                  currentMcq.options[selectedOption] === currentMcq.correctAnswer
+                    ? "bg-[#D1FAE5] text-[#065F46]"
+                    : "bg-[#FEE2E2] text-[#991B1B]"
                 }`}
               >
-                {currentMcq.options[selectedOption] === currentMcq.correctAnswer
-                  ? "Correct!"
-                  : "Incorrect!"}
-              </p>
-            </div>
-          )}
+                {currentMcq.options[selectedOption] === currentMcq.correctAnswer ? (
+                  <>
+                    <CheckCircle2 className="w-5 h-5 shrink-0 text-[#10B981]" />
+                    <span>Correct! Great intuition.</span>
+                  </>
+                ) : (
+                  <>
+                    <XCircle className="w-5 h-5 shrink-0 text-[#EF4444]" />
+                    <span>Incorrect. The correct answer was: {currentMcq.correctAnswer}</span>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
 
+          {/* Submit Action */}
           <Button
             onClick={handleSubmit}
             disabled={selectedOption === null || isSubmitted}
-            variant="outline"
-            className={`mt-4 w-full ${isSubmitted ? "opacity-50" : ""}`}
+            className={`btn-brutal mt-5 w-full h-12 rounded-2xl font-black text-xs sm:text-sm ${
+              isSubmitted
+                ? "bg-[#F5F2EB] text-[#888888] border-[#191919] opacity-70"
+                : "bg-[#E85B9C] hover:bg-[#C93678] text-white shadow-brutal"
+            }`}
           >
-            {isSubmitted ? "Submitted" : "Submit Answer"}
+            {isSubmitted ? "Answer Submitted" : "Submit Answer"}
           </Button>
-        </section>
+        </div>
       </div>
 
-      {/* Navigation */}
-      <div className="flex justify-between items-center pt-3 border-t border-gray-200 shrink-0">
+      {/* Bottom Navigation */}
+      <div className="flex justify-between items-center pt-4 border-t-2 border-[#191919] mt-2">
         <Button
           onClick={handlePrevious}
           disabled={isFirst}
           variant="outline"
-          className={`px-4 text-sm ${isFirst ? "opacity-50 cursor-not-allowed" : ""}`}
+          className="btn-brutal h-10 px-4 rounded-xl text-xs font-black bg-[#FFFDF9] text-[#191919] cursor-pointer"
         >
-          ← Previous
+          <ArrowLeft className="w-3.5 h-3.5 mr-1" />
+          <span>Previous</span>
         </Button>
 
-        <span className="text-sm text-gray-500">
+        <span className="text-xs font-black text-[#6B6B6B]">
           {currentIndex + 1} / {questions.length}
         </span>
 
         <Button
           onClick={handleNext}
           disabled={isLast}
-          variant="outline"
-          className={`px-4 text-sm ${isLast ? "opacity-50 cursor-not-allowed" : ""}`}
+          className="btn-brutal h-10 px-5 rounded-xl text-xs font-black bg-[#E85B9C] hover:bg-[#C93678] text-white cursor-pointer"
         >
-          Next →
+          <span>Next</span>
+          <ArrowRight className="w-3.5 h-3.5 ml-1" />
         </Button>
       </div>
     </div>

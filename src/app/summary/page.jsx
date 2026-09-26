@@ -31,7 +31,7 @@ export default function Summary() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-24 pb-12 px-6">
+    <div className="min-h-[calc(100vh-5rem)] bg-paper-grid pt-10 pb-16 px-4 sm:px-8">
       <div className="max-w-4xl mx-auto">
         <ReviewTestList
           type="summary"
@@ -39,8 +39,8 @@ export default function Summary() {
           loading={loading}
           error={error}
           title="Saved Summaries"
-          description="Review your past summaries and open the topic you want to revisit."
-          actionLabel="View Summary"
+          description="Review your past study summaries and open any topic to read high-yield notes."
+          actionLabel="Read Summary"
           onReview={(item) => router.push(`/summary/${item.id}`)}
           onClose={() => router.push("/dashboard")}
         />
