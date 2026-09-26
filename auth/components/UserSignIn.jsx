@@ -109,15 +109,7 @@ const UserSignIn = ({ setState, isAuthenticating, setIsAuthenticating }) => {
           <div className="flex-grow border-t border-slate-200"></div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <Button
-            variant="outline"
-            className="h-11 rounded-xl border-slate-200 text-slate-600 hover:bg-slate-50 font-semibold shadow-sm"
-            onClick={() => handleProviderSignIn("google")}
-            disabled={isAuthenticating}
-          >
-            Google
-          </Button>
+        <div className="grid grid-cols-1 gap-4">
           <Button
             variant="outline"
             className="h-11 rounded-xl border-slate-200 text-slate-600 hover:bg-slate-50 font-semibold shadow-sm"
