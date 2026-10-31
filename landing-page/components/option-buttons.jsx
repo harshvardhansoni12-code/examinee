@@ -8,6 +8,10 @@ import { PDF_TOO_LARGE_ERROR } from "../../src/lib/pdf-upload";
 const getReadableError = (message, fallback) => {
   const text = typeof message === "string" ? message : "";
 
+  if (/unexpected token|not valid json|unexpected end of json/i.test(text)) {
+    return fallback;
+  }
+
   if (/429|too many requests|rate limit|quota|resource exhausted/i.test(text)) {
     return "Too many requests. Please try again later.";
   }
