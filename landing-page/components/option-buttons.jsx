@@ -26,8 +26,22 @@ const getApiError = (response, data, fallback) => {
   if (response.status === 413) {
     return PDF_TOO_LARGE_ERROR;
   }
+  if (response.status >= 500) {
+    return "The server couldn't process this PDF right now. Please try again.";
+  }
 
   return getReadableError(data?.error, fallback);
+};
+
+const getRequestError = (error, fallback) => {
+  if (
+    error instanceof TypeError ||
+    /failed to fetch|networkerror|load failed/i.test(error?.message || "")
+  ) {
+    return "Upload failed. Check your internet connection and try again.";
+  }
+
+  return getReadableError(error?.message, fallback);
 };
 
 const readApiResponse = async (response) => {
@@ -75,8 +89,8 @@ export const OptionsButtons = ({ pdf, isProcessing, setIsProcessing }) => {
     } catch (error) {
       console.error(error);
       toast.error(
-        getReadableError(
-          error.message,
+        getRequestError(
+          error,
           "We couldn't generate the MCQs. Please try again.",
         ),
       );
@@ -118,8 +132,8 @@ export const OptionsButtons = ({ pdf, isProcessing, setIsProcessing }) => {
     } catch (error) {
       console.error(error);
       toast.error(
-        getReadableError(
-          error.message,
+        getRequestError(
+          error,
           "We couldn't create the cards. Please try again.",
         ),
       );
@@ -161,8 +175,8 @@ export const OptionsButtons = ({ pdf, isProcessing, setIsProcessing }) => {
     } catch (error) {
       console.error(error);
       toast.error(
-        getReadableError(
-          error.message,
+        getRequestError(
+          error,
           "We couldn't create the summary. Please try again.",
         ),
       );
