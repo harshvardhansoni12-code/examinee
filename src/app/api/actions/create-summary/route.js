@@ -5,6 +5,10 @@ import { authOptions } from "../../../../lib/auth-options";
 import { extractAndStoreText } from "../../../../lib/pdfService";
 import { getText } from "../../../../lib/text";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import {
+  MAX_PDF_SIZE_BYTES,
+  PDF_TOO_LARGE_ERROR,
+} from "../../../../lib/pdf-upload";
 //import { prisma } from "../../../../lib/prisma";
 export async function POST(req) {
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
@@ -18,6 +22,12 @@ export async function POST(req) {
     const file = formData.get("file");
     if (!file) {
       return Response.json({ error: "No file uploaded" }, { status: 400 });
+    }
+    if (file.size > MAX_PDF_SIZE_BYTES) {
+      return Response.json(
+        { error: PDF_TOO_LARGE_ERROR },
+        { status: 413 },
+      );
     }
     //
     const buffer = Buffer.from(await file.arrayBuffer());

@@ -3,6 +3,11 @@ import { Input } from "../../src/components/ui/input";
 import { Button } from "../../src/components/ui/button";
 import { FileUp, FileText, CheckCircle2 } from "lucide-react";
 import { useRef } from "react";
+import toast from "react-hot-toast";
+import {
+  MAX_PDF_SIZE_BYTES,
+  PDF_TOO_LARGE_ERROR,
+} from "../../src/lib/pdf-upload";
 
 export const InputBar = ({ pdf, setPdf, disabled = false }) => {
   const fileRef = useRef(null);
@@ -15,7 +20,13 @@ export const InputBar = ({ pdf, setPdf, disabled = false }) => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    if (file.size > MAX_PDF_SIZE_BYTES) {
+      toast.error(PDF_TOO_LARGE_ERROR);
+      e.target.value = "";
+      return;
+    }
     setPdf(file);
+    e.target.value = "";
   };
 
   return (
@@ -50,7 +61,7 @@ export const InputBar = ({ pdf, setPdf, disabled = false }) => {
                 Choose a PDF study document
               </p>
               <p className="text-xs font-semibold text-[#888888]">
-                Lecture notes, textbook chapters, or exam reviews
+                Lecture notes, textbook chapters, or exam reviews (up to 4 MB)
               </p>
             </div>
           )}

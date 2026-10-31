@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import { Button } from "../../src/components/ui/button";
 import { useRouter } from "next/navigation";
 import { BookOpenCheck, WalletCards, FileText, Loader2, Sparkles } from "lucide-react";
+import { PDF_TOO_LARGE_ERROR } from "../../src/lib/pdf-upload";
 
 const getReadableError = (message, fallback) => {
   const text = typeof message === "string" ? message : "";
@@ -22,8 +23,19 @@ const getApiError = (response, data, fallback) => {
   if (response.status === 401) {
     return "Your session has expired. Please sign in again.";
   }
+  if (response.status === 413) {
+    return PDF_TOO_LARGE_ERROR;
+  }
 
   return getReadableError(data?.error, fallback);
+};
+
+const readApiResponse = async (response) => {
+  try {
+    return await response.json();
+  } catch {
+    return null;
+  }
 };
 
 export const OptionsButtons = ({ pdf, isProcessing, setIsProcessing }) => {
@@ -46,7 +58,7 @@ export const OptionsButtons = ({ pdf, isProcessing, setIsProcessing }) => {
         method: "POST",
         body: formData,
       });
-      const data = await response.json();
+      const data = await readApiResponse(response);
       if (!response.ok) {
         throw new Error(
           getApiError(
@@ -89,7 +101,7 @@ export const OptionsButtons = ({ pdf, isProcessing, setIsProcessing }) => {
         method: "POST",
         body: formData,
       });
-      const data = await response.json();
+      const data = await readApiResponse(response);
       if (!response.ok) {
         throw new Error(
           getApiError(
@@ -132,7 +144,7 @@ export const OptionsButtons = ({ pdf, isProcessing, setIsProcessing }) => {
         method: "POST",
         body: formData,
       });
-      const data = await response.json();
+      const data = await readApiResponse(response);
       if (!response.ok) {
         throw new Error(
           getApiError(
